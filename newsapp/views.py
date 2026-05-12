@@ -4,19 +4,23 @@ from django.db.models import Q
 
 
 def home(request):
-    latest_news = News.objects.order_by('-created_at')
+    latest_news = News.objects.exclude(
+        slug=''
+    ).order_by('-created_at')[:10]
 
     breaking_news = News.objects.filter(is_breaking=True)[:5]
 
     trending_news = News.objects.filter(is_trending=True)[:6]
 
     categories = Category.objects.all()
+    most_viewed_news = News.objects.order_by('-views')[:6]
 
     return render(request, 'home.html', {
         'latest_news': latest_news,
         'breaking_news': breaking_news,
         'trending_news': trending_news,
         'categories': categories,
+        'most_viewed_news': most_viewed_news,
     })
 
 
@@ -59,3 +63,23 @@ def search(request):
         'results': results,
         'query': query
     })
+
+
+def about(request):
+    return render(request, 'about.html')
+
+
+def contact(request):
+    return render(request, 'contact.html')
+
+
+def privacy_policy(request):
+    return render(request, 'privacy-policy.html')
+
+
+def disclaimer(request):
+    return render(request, 'disclaimer.html')
+
+
+def terms(request):
+    return render(request, 'terms.html')

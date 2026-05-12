@@ -2,11 +2,197 @@
 
 {% block content %}
 
+
+<!-- Breaking News -->
+
+{% if breaking_news %}
+
+<section class="breaking-news">
+
+    <div class="container">
+
+        <div class="ticker-wrap">
+
+            <div class="ticker">
+
+                {% for news in breaking_news %}
+
+                {% if news.slug %}
+
+                <div class="ticker-item">
+
+                    🔥
+
+                    <a href="{% url 'news_detail' news.slug %}">
+
+                        {{ news.title }}
+
+                    </a>
+
+                </div>
+
+                {% endif %}
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endif %}
+
+
+<!-- Hero Section -->
+
+<section class="hero-section py-4">
+
+    <div class="container">
+
+        <div class="row">
+
+            <div class="col-lg-8">
+
+                {% if latest_news %}
+
+                <div class="hero-news">
+
+                    {% if latest_news.0.image %}
+
+                    <img src="{{ latest_news.0.image.url }}"
+                         class="img-fluid rounded">
+
+                    {% endif %}
+
+                    <div class="overlay">
+
+                        <span class="badge bg-danger mb-3">
+
+                        Breaking
+
+                        </span>
+
+                        <h1>
+
+                            {% if latest_news.0.slug %}
+
+                            <a href="{% url 'news_detail' latest_news.0.slug %}">
+
+                                {{ latest_news.0.title }}
+
+                            </a>
+
+                            {% else %}
+
+                            {{ latest_news.0.title }}
+
+                            {% endif %}
+
+                        </h1>
+
+                        <p>
+
+                            {{ latest_news.0.meta_description|truncatewords:25 }}
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+                {% else %}
+
+                <div class="alert alert-warning">
+
+                    No News Uploaded Yet
+
+                </div>
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- Trending Sidebar -->
+
+            <div class="col-lg-4">
+
+                {% if trending_news %}
+
+                {% for news in trending_news %}
+
+                <div class="side-card mb-3">
+
+                    <div class="row g-2">
+
+                        <div class="col-4">
+
+                            {% if news.image %}
+
+                            <img src="{{ news.image.url }}"
+                                 class="img-fluid rounded">
+
+                            {% endif %}
+
+                        </div>
+
+                        <div class="col-8">
+
+                            <h6>
+
+                                {% if news.slug %}
+
+                                <a href="{% url 'news_detail' news.slug %}">
+
+                                    {{ news.title }}
+
+                                </a>
+
+                                {% else %}
+
+                                {{ news.title }}
+
+                                {% endif %}
+
+                            </h6>
+
+                            <p class="small text-muted">
+
+                                {{ news.created_at|date:"d M Y" }}
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                {% endfor %}
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- Categories -->
+
+{% if categories %}
+
 <section class="categories-section py-5">
 
     <div class="container">
 
-        <h2 class="section-title mb-5">
+        <h2 class="section-title">
 
             Popular Categories
 
@@ -15,6 +201,8 @@
         <div class="row">
 
             {% for cat in categories %}
+
+            {% if cat.slug %}
 
             <div class="col-lg-2 col-md-4 col-6 mb-4">
 
@@ -27,6 +215,8 @@
 
             </div>
 
+            {% endif %}
+
             {% endfor %}
 
         </div>
@@ -35,122 +225,68 @@
 
 </section>
 
-<section class="breaking-news">
-    <div class="container">
-
-        <div class="ticker-wrap">
-            <div class="ticker">
-
-                {% for news in breaking_news %}
-
-                <div class="ticker-item">
-                    🔥 {{ news.title }}
-                </div>
-
-                {% endfor %}
-
-            </div>
-        </div>
-
-    </div>
-</section>
+{% endif %}
 
 
-<section class="hero-section py-4">
-    <div class="container">
+<!-- Trending News -->
 
-        <div class="row">
-
-            <div class="col-lg-8">
-
-                <div class="hero-news">
-                    {% if latest_news %}
-
-                    <img src="{{ latest_news.0.image.url }}" class="img-fluid rounded">
-
-                    {% endif %}
-
-                    <div class="overlay">
-
-                        <h1>
-
-                            {% if latest_news %}
-
-                            <a href="{% url 'news_detail' latest_news.0.slug %}">
-
-                                {{ latest_news.0.title }}
-
-                            </a>
-
-                            {% else %}
-
-                            No News Available
-
-                            {% endif %}
-
-                        </h1>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            <div class="col-lg-4">
-
-                {% for news in trending_news %}
-
-                <div class="side-card mb-3">
-
-                    <img src="{{ news.image.url }}" class="img-fluid rounded">
-
-                    <h5 class="mt-2">
-                        {% if news.slug %}
-                        <a href="{% url 'news_detail' news.slug %}">
-                            {{ news.title }}
-                        </a>
-                        {% endif %}
-                    </h5>
-
-                </div>
-
-                {% endfor %}
-
-            </div>
-
-        </div>
-
-    </div>
-</section>
-
+{% if trending_news %}
 
 <section class="latest-news py-5">
+
     <div class="container">
 
-        <h2 class="section-title mb-4">
-            Latest News
+        <h2 class="section-title">
+
+            Trending News
+
         </h2>
 
         <div class="row">
 
-            {% for news in latest_news %}
+            {% for news in trending_news %}
 
             <div class="col-lg-4 col-md-6 mb-4">
 
                 <div class="news-card">
 
-                    <img src="{{ news.image.url }}" class="img-fluid">
+                    {% if news.image %}
+
+                    <img src="{{ news.image.url }}"
+                         class="img-fluid">
+
+                    {% endif %}
 
                     <div class="news-content">
 
+                        <span class="badge bg-primary mb-2">
+
+                        Trending
+
+                        </span>
+
                         <h4>
+
+                            {% if news.slug %}
+
                             <a href="{% url 'news_detail' news.slug %}">
+
                                 {{ news.title }}
+
                             </a>
+
+                            {% else %}
+
+                            {{ news.title }}
+
+                            {% endif %}
+
                         </h4>
 
                         <p>
+
                             {{ news.meta_description|truncatewords:20 }}
+
                         </p>
 
                     </div>
@@ -164,6 +300,196 @@
         </div>
 
     </div>
+
 </section>
+
+{% endif %}
+
+
+<!-- Latest News -->
+
+{% if latest_news %}
+
+<section class="latest-news py-5 bg-light">
+
+    <div class="container">
+
+        <h2 class="section-title">
+
+            Latest News
+
+        </h2>
+
+        <div class="row">
+
+            {% for news in latest_news %}
+
+            <div class="col-lg-3 col-md-6 mb-4">
+
+                <div class="news-card h-100">
+
+                    {% if news.image %}
+
+                    <img src="{{ news.image.url }}"
+                         class="img-fluid">
+
+                    {% endif %}
+
+                    <div class="news-content">
+
+                    <span class="badge bg-danger mb-2">
+
+                    {{ news.category.name }}
+
+                    </span>
+
+                        <h5>
+
+                            {% if news.slug %}
+
+                            <a href="{% url 'news_detail' news.slug %}">
+
+                                {{ news.title }}
+
+                            </a>
+
+                            {% else %}
+
+                            {{ news.title }}
+
+                            {% endif %}
+
+                        </h5>
+
+                        <p>
+
+                            {{ news.meta_description|truncatewords:15 }}
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endif %}
+
+
+<!-- Most Viewed -->
+
+{% if most_viewed_news %}
+
+<section class="latest-news py-5">
+
+    <div class="container">
+
+        <h2 class="section-title">
+
+            Most Viewed News
+
+        </h2>
+
+        <div class="row">
+
+            {% for news in most_viewed_news %}
+
+            <div class="col-lg-4 mb-4">
+
+                <div class="news-card">
+
+                    {% if news.image %}
+
+                    <img src="{{ news.image.url }}"
+                         class="img-fluid">
+
+                    {% endif %}
+
+                    <div class="news-content">
+
+                        <h4>
+
+                            {% if news.slug %}
+
+                            <a href="{% url 'news_detail' news.slug %}">
+
+                                {{ news.title }}
+
+                            </a>
+
+                            {% else %}
+
+                            {{ news.title }}
+
+                            {% endif %}
+
+                        </h4>
+
+                        <p>
+
+                            Views: {{ news.views }}
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endif %}
+
+
+<!-- Newsletter -->
+
+<section class="newsletter-section py-5">
+
+    <div class="container text-center">
+
+        <h2>
+
+            Subscribe Newsletter
+
+        </h2>
+
+        <p>
+
+            Get latest breaking news directly in your inbox.
+
+        </p>
+
+        <form class="newsletter-form">
+
+            <input type="email"
+                   placeholder="Enter Your Email">
+
+            <button type="submit">
+
+                Subscribe
+
+            </button>
+
+        </form>
+
+    </div>
+
+</section>
+
 
 {% endblock %}
