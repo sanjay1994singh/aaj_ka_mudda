@@ -1,0 +1,423 @@
+/* =========================
+   GLOBAL CSS
+========================= */
+
+body{
+    background:#f5f5f5;
+    font-family:'Poppins', sans-serif;
+    overflow-x:hidden;
+}
+
+a{
+    text-decoration:none;
+}
+
+img{
+    max-width:100%;
+}
+
+
+/* =========================
+   NAVBAR
+========================= */
+
+.navbar{
+    padding:15px 0;
+    box-shadow:0 2px 10px rgba(0,0,0,0.1);
+}
+
+.navbar-brand{
+    font-size:28px;
+    font-weight:700;
+    letter-spacing:1px;
+}
+
+.nav-link{
+    font-weight:500;
+    margin-left:10px;
+    transition:0.3s;
+}
+
+.nav-link:hover{
+    color:#ff3c3c !important;
+}
+
+
+/* =========================
+   BREAKING NEWS
+========================= */
+
+.breaking-news{
+    background:#fff;
+    padding:10px 0;
+    border-bottom:1px solid #ddd;
+}
+
+.ticker-wrap{
+    width:100%;
+    overflow:hidden;
+    background:red;
+    color:white;
+    border-radius:8px;
+    padding:12px;
+}
+
+.ticker{
+    display:flex;
+    gap:50px;
+    white-space:nowrap;
+    animation:ticker 20s linear infinite;
+}
+
+.ticker-item{
+    font-weight:600;
+}
+
+@keyframes ticker{
+
+0%{
+    transform:translateX(100%);
+}
+
+100%{
+    transform:translateX(-100%);
+}
+
+}
+
+
+/* =========================
+   HERO SECTION
+========================= */
+
+.hero-section{
+    padding:30px 0;
+}
+
+.hero-news{
+    position:relative;
+    overflow:hidden;
+    border-radius:20px;
+}
+
+.hero-news img{
+    width:100%;
+    height:520px;
+    object-fit:cover;
+    transition:0.5s;
+}
+
+.hero-news:hover img{
+    transform:scale(1.05);
+}
+
+.overlay{
+    position:absolute;
+    left:0;
+    right:0;
+    bottom:0;
+    padding:40px 30px;
+    background:linear-gradient(transparent, rgba(0,0,0,0.95));
+}
+
+.overlay h1{
+    font-size:38px;
+    line-height:1.4;
+}
+
+.overlay h1 a{
+    color:white;
+}
+
+
+/* =========================
+   SIDE CARD
+========================= */
+
+.side-card{
+    background:white;
+    padding:12px;
+    border-radius:15px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.08);
+    transition:0.3s;
+}
+
+.side-card:hover{
+    transform:translateY(-5px);
+}
+
+.side-card img{
+    width:100%;
+    height:140px;
+    object-fit:cover;
+    border-radius:10px;
+}
+
+.side-card h5{
+    margin-top:12px;
+    font-size:18px;
+    line-height:1.5;
+}
+
+.side-card h5 a{
+    color:#000;
+}
+
+
+/* =========================
+   SECTION TITLE
+========================= */
+
+.section-title{
+    font-weight:700;
+    position:relative;
+    padding-bottom:12px;
+    margin-bottom:30px;
+}
+
+.section-title::after{
+    content:'';
+    width:80px;
+    height:4px;
+    background:red;
+    position:absolute;
+    left:0;
+    bottom:0;
+}
+
+
+/* =========================
+   NEWS CARD
+========================= */
+
+.news-card{
+    background:white;
+    border-radius:18px;
+    overflow:hidden;
+    box-shadow:0 5px 20px rgba(0,0,0,0.08);
+    transition:0.4s;
+    height:100%;
+}
+
+.news-card:hover{
+    transform:translateY(-8px);
+}
+
+.news-card img{
+    width:100%;
+    height:230px;
+    object-fit:cover;
+}
+
+.news-content{
+    padding:20px;
+}
+
+.news-title{
+    font-size:22px;
+    line-height:1.5;
+    margin-bottom:15px;
+}
+
+.news-title a{
+    color:#111;
+}
+
+.news-content p{
+    color:#666;
+    font-size:15px;
+}
+
+
+/* =========================
+   CATEGORY BOX
+========================= */
+
+.category-box{
+    display:block;
+    background:white;
+    padding:25px;
+    border-radius:15px;
+    text-align:center;
+    text-decoration:none;
+    color:black;
+    font-weight:600;
+    transition:0.3s;
+    box-shadow:0 5px 15px rgba(0,0,0,0.08);
+}
+
+.category-box:hover{
+    background:black;
+    color:white;
+    transform:translateY(-5px);
+}
+
+
+/* =========================
+   SIDEBAR
+========================= */
+
+.sidebar-news{
+    background:white;
+    padding:10px;
+    border-radius:15px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.08);
+}
+
+.sidebar-news img{
+    width:100%;
+    height:180px;
+    object-fit:cover;
+}
+
+.sidebar-news h6{
+    margin-top:12px;
+    line-height:1.5;
+}
+
+.sidebar-news h6 a{
+    color:#000;
+}
+
+
+/* =========================
+   SOCIAL SHARE
+========================= */
+
+.social-share{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+.footer{
+    background:#111;
+    color:white;
+    padding:60px 0 30px;
+}
+
+.footer h3,
+.footer h5{
+    margin-bottom:20px;
+}
+
+.footer-links{
+    list-style:none;
+    padding:0;
+}
+
+.footer-links li{
+    margin-bottom:10px;
+}
+
+.footer-links a{
+    color:white;
+    transition:0.3s;
+}
+
+.footer-links a:hover{
+    color:red;
+}
+
+.social-icons{
+    display:flex;
+    gap:15px;
+}
+
+.social-icons a{
+    color:white;
+    transition:0.3s;
+}
+
+.social-icons a:hover{
+    color:red;
+}
+
+
+/* =========================
+   ALERT BOX
+========================= */
+
+.alert{
+    border-radius:15px;
+}
+
+
+/* =========================
+   RESPONSIVE CSS
+========================= */
+
+@media(max-width:991px){
+
+.hero-news img{
+    height:350px;
+}
+
+.overlay h1{
+    font-size:28px;
+}
+
+.side-card{
+    margin-top:20px;
+}
+
+}
+
+
+@media(max-width:768px){
+
+.navbar-brand{
+    font-size:22px;
+}
+
+.hero-news img{
+    height:280px;
+}
+
+.overlay{
+    padding:20px;
+}
+
+.overlay h1{
+    font-size:22px;
+}
+
+.news-card img{
+    height:200px;
+}
+
+.section-title{
+    font-size:24px;
+}
+
+}
+
+
+@media(max-width:576px){
+
+.hero-news img{
+    height:240px;
+}
+
+.overlay h1{
+    font-size:18px;
+}
+
+.news-title{
+    font-size:18px;
+}
+
+.footer{
+    text-align:center;
+}
+
+.social-icons{
+    justify-content:center;
+}
+
+}

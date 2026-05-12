@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{ news.meta_title }}
+{% endblock %}
+
+{% block meta_description %}
+{{ news.meta_description }}
+{% endblock %}
+
+{% block keywords %}
+{{ news.keywords }}
+{% endblock %}
+
+{% block og_title %}
+{{ news.title }}
+{% endblock %}
+
+{% block og_description %}
+{{ news.meta_description }}
+{% endblock %}
+
+{% block og_image %}
+{{ news.image.url }}
+{% endblock %}
+
+
+{% block content %}
+
+<div class="container py-5">
+
+    <div class="row">
+
+        <div class="col-lg-8">
+
+            <h1 class="mb-3">
+                {{ news.title }}
+            </h1>
+
+            <img src="{{ news.image.url }}" class="img-fluid rounded mb-4">
+
+            <div class="social-share mb-4">
+
+                <a class="btn btn-success"
+                   href="https://wa.me/?text={{ request.build_absolute_uri }}">
+                    WhatsApp
+                </a>
+
+                <a class="btn btn-primary"
+                   href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}">
+                    Facebook
+                </a>
+
+                <a class="btn btn-info"
+                   href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri }}">
+                    Twitter
+                </a>
+
+            </div>
+
+            <div class="content-area">
+                {{ news.content|safe }}
+            </div>
+
+        </div>
+
+        <div class="col-lg-4">
+
+            {% include 'includes/sidebar.html' %}
+
+            <h4 class="mt-5 mb-4">
+                Related News
+            </h4>
+
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

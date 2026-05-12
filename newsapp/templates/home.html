@@ -1,0 +1,169 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<section class="categories-section py-5">
+
+    <div class="container">
+
+        <h2 class="section-title mb-5">
+
+            Popular Categories
+
+        </h2>
+
+        <div class="row">
+
+            {% for cat in categories %}
+
+            <div class="col-lg-2 col-md-4 col-6 mb-4">
+
+                <a href="{% url 'category_news' cat.slug %}"
+                   class="category-box">
+
+                    {{ cat.name }}
+
+                </a>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</section>
+
+<section class="breaking-news">
+    <div class="container">
+
+        <div class="ticker-wrap">
+            <div class="ticker">
+
+                {% for news in breaking_news %}
+
+                <div class="ticker-item">
+                    🔥 {{ news.title }}
+                </div>
+
+                {% endfor %}
+
+            </div>
+        </div>
+
+    </div>
+</section>
+
+
+<section class="hero-section py-4">
+    <div class="container">
+
+        <div class="row">
+
+            <div class="col-lg-8">
+
+                <div class="hero-news">
+                    {% if latest_news %}
+
+                    <img src="{{ latest_news.0.image.url }}" class="img-fluid rounded">
+
+                    {% endif %}
+
+                    <div class="overlay">
+
+                        <h1>
+
+                            {% if latest_news %}
+
+                            <a href="{% url 'news_detail' latest_news.0.slug %}">
+
+                                {{ latest_news.0.title }}
+
+                            </a>
+
+                            {% else %}
+
+                            No News Available
+
+                            {% endif %}
+
+                        </h1>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-lg-4">
+
+                {% for news in trending_news %}
+
+                <div class="side-card mb-3">
+
+                    <img src="{{ news.image.url }}" class="img-fluid rounded">
+
+                    <h5 class="mt-2">
+                        {% if news.slug %}
+                        <a href="{% url 'news_detail' news.slug %}">
+                            {{ news.title }}
+                        </a>
+                        {% endif %}
+                    </h5>
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+
+<section class="latest-news py-5">
+    <div class="container">
+
+        <h2 class="section-title mb-4">
+            Latest News
+        </h2>
+
+        <div class="row">
+
+            {% for news in latest_news %}
+
+            <div class="col-lg-4 col-md-6 mb-4">
+
+                <div class="news-card">
+
+                    <img src="{{ news.image.url }}" class="img-fluid">
+
+                    <div class="news-content">
+
+                        <h4>
+                            <a href="{% url 'news_detail' news.slug %}">
+                                {{ news.title }}
+                            </a>
+                        </h4>
+
+                        <p>
+                            {{ news.meta_description|truncatewords:20 }}
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}

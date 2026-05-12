@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Search Results
+{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <div class="row">
+
+        <div class="col-12 mb-4">
+
+            <h1 class="fw-bold">
+
+                Search Results
+
+            </h1>
+
+            {% if query %}
+
+            <p class="text-muted">
+
+                Showing results for:
+                <strong>{{ query }}</strong>
+
+            </p>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+    <div class="row">
+
+        {% if results %}
+
+        {% for news in results %}
+
+        <div class="col-lg-4 col-md-6 mb-4">
+
+            <div class="news-card h-100">
+
+                <div class="news-image">
+
+                    <a href="{% url 'news_detail' news.slug %}">
+
+                        <img src="{{ news.image.url }}"
+                             class="img-fluid"
+                             alt="{{ news.title }}">
+
+                    </a>
+
+                </div>
+
+                <div class="news-content p-3">
+
+                        <span class="badge bg-danger mb-2">
+
+                            {{ news.category.name }}
+
+                        </span>
+
+                    <h4 class="news-title">
+
+                        <a href="{% url 'news_detail' news.slug %}">
+
+                            {{ news.title }}
+
+                        </a>
+
+                    </h4>
+
+                    <p class="text-muted small">
+
+                        {{ news.created_at|date:"d M Y" }}
+
+                    </p>
+
+                    <p>
+
+                        {{ news.meta_description|truncatewords:20 }}
+
+                    </p>
+
+                    <a href="{% url 'news_detail' news.slug %}"
+                       class="btn btn-dark btn-sm">
+
+                        Read More
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+        {% else %}
+
+        <div class="col-12">
+
+            <div class="alert alert-warning text-center p-5">
+
+                <h4>
+
+                    No News Found
+
+                </h4>
+
+                <p>
+
+                    Try searching with another keyword.
+
+                </p>
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}

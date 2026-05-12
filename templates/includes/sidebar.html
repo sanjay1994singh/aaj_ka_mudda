@@ -1,0 +1,32 @@
+<div class="sidebar">
+
+    <h4 class="mb-4">
+        Trending News
+    </h4>
+
+    {% for news in trending_news %}
+
+    <div class="sidebar-news mb-4">
+
+        <a href="{% url 'news_detail' news.slug %}">
+
+            <img src="{{ news.image.url }}"
+                 class="img-fluid rounded">
+
+        </a>
+
+        <h6 class="mt-2">
+
+            <a href="{% url 'news_detail' news.slug %}">
+
+                {{ news.title }}
+
+            </a>
+
+        </h6>
+
+    </div>
+
+    {% endfor %}
+
+</div>

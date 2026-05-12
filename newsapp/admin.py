@@ -1,0 +1,22 @@
+from django.contrib import admin
+from .models import Category, News
+
+admin.site.site_header = "News Portal Admin"
+
+
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+
+    prepopulated_fields = {'slug': ('name',)}
+
+
+@admin.register(News)
+class NewsAdmin(admin.ModelAdmin):
+
+    list_display = ['title', 'category', 'is_breaking', 'created_at']
+
+    list_filter = ['category']
+
+    search_fields = ['title']
+
+    prepopulated_fields = {'slug': ('title',)}
