@@ -2,11 +2,15 @@ from django.db import models
 from django.utils.text import slugify
 from ckeditor.fields import RichTextField
 from taggit.managers import TaggableManager
+from django.urls import reverse
 
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
     slug = models.SlugField(unique=True, blank=True)
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -15,6 +19,12 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse(
+            'category_news',
+            kwargs={'slug': self.slug}
+        )
 
 
 class News(models.Model):
@@ -51,3 +61,9 @@ class News(models.Model):
 
     def __str__(self):
         return self.title
+
+    def get_absolute_url(self):
+        return reverse(
+            'news_detail',
+            kwargs={'slug': self.slug}
+        )
