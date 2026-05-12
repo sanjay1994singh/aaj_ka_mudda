@@ -1,9 +1,9 @@
 from django.contrib import admin
-from .models import Category, News
+from .models import Category, News, State
 
 admin.site.site_header = "News Portal Admin"
 
-
+admin.site.register(State)
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
 
