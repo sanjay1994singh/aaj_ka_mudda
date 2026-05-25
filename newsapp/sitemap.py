@@ -10,7 +10,7 @@ class NewsSitemap(Sitemap):
 
     def items(self):
 
-        return News.objects.all()
+        return News.objects.all().order_by('-created_at')
 
     def lastmod(self, obj):
 
@@ -26,7 +26,7 @@ class CategorySitemap(Sitemap):
 
     def items(self):
 
-        return Category.objects.all()
+        return Category.objects.all().order_by('-created_at')
 
     def lastmod(self, obj):
 
