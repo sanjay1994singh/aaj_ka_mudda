@@ -408,3 +408,34 @@
     display: inline-block !important;
     white-space: normal !important;
 }
+
+
+/* FINAL FIX */
+
+#content {
+    width: auto !important;
+    max-width: 100% !important;
+}
+
+#content-main {
+    width: 100% !important;
+}
+
+.results {
+    overflow-x: hidden !important;
+}
+
+#result_list {
+    width: 100% !important;
+    table-layout: auto !important;
+}
+
+#result_list th,
+#result_list td {
+    white-space: normal !important;
+    word-break: break-word !important;
+}
+
+#result_list td:first-child a {
+    display: inline !important;
+}
