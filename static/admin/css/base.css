@@ -916,7 +916,9 @@ a.deletelink:focus, a.deletelink:hover {
 }
 
 #content {
-    padding: 20px 40px;
+    padding: 20px 40px !important;
+    width: calc(100% - 300px) !important;
+    max-width: 100% !important;
 }
 
 .dashboard #content {
