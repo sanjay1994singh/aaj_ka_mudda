@@ -6,7 +6,8 @@ urlpatterns = [
 
     path('', views.home, name='home'),
 
-    path('news/<slug:slug>/', views.news_detail, name='news_detail'),
+    path('news-detail/<int:id>/', views.news_detail, name='news_detail'),
+    path('news-detail/<int:id>/<str:slug>/', views.news_detail, name='news_detail'),
 
     path('category/<slug:slug>/', views.category_news, name='category_news'),
 

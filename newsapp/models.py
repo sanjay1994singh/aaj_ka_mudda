@@ -3,6 +3,7 @@ from django.utils.text import slugify
 from ckeditor.fields import RichTextField
 from taggit.managers import TaggableManager
 from django.urls import reverse
+import re
 
 
 class State(models.Model):
@@ -42,6 +43,25 @@ class Category(models.Model):
         )
 
 
+def hindi_slug(text):
+    text = str(text).strip().lower()
+
+    # keep Hindi + English + numbers + spaces
+    text = re.sub(
+        r'[^ऀ-ॿa-zA-Z0-9\s-]',
+        '',
+        text
+    )
+
+    # replace spaces with hyphen
+    text = re.sub(r'[\s]+', '-', text)
+
+    # remove duplicate hyphens
+    text = re.sub(r'-+', '-', text)
+
+    return text.strip('-')
+
+
 class News(models.Model):
     title = models.CharField(max_length=300)
     slug = models.SlugField(unique=True, blank=True)
@@ -69,16 +89,37 @@ class News(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
+
         if not self.slug:
-            self.slug = slugify(self.title)
+            base_slug = hindi_slug(self.title)
+
+            if not base_slug:
+                base_slug = f'news-{self.id}'
+
+            slug = base_slug
+            counter = 1
+
+            while News.objects.filter(
+                    slug=slug
+            ).exclude(
+                id=self.id
+            ).exists():
+                slug = f'{base_slug}-{counter}'
+                counter += 1
+
+            self.slug = slug
 
         super().save(*args, **kwargs)
 
-    def __str__(self):
-        return self.title
-
     def get_absolute_url(self):
+
         return reverse(
             'news_detail',
-            kwargs={'slug': self.slug}
+            kwargs={
+                'id': self.id,
+                'slug': self.slug
+            }
         )
+
+    def __str__(self):
+        return self.title

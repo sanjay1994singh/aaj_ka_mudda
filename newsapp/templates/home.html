@@ -23,7 +23,7 @@
 
                     🔥
 
-                    <a href="{% url 'news_detail' news.slug %}">
+                    <a href="{% url 'news_detail' news.id %}">
 
                         {{ news.title }}
 
@@ -79,7 +79,7 @@
 
                             {% if latest_news.0.slug %}
 
-                            <a href="{% url 'news_detail' latest_news.0.slug %}">
+                            <a href="{% url 'news_detail' latest_news.0.id %}">
 
                                 {{ latest_news.0.title }}
 
@@ -145,7 +145,7 @@
 
                                 {% if news.slug %}
 
-                                <a href="{% url 'news_detail' news.slug %}">
+                                <a href="{% url 'news_detail' news.id %}">
 
                                     {{ news.title }}
 
@@ -269,7 +269,7 @@
 
                             {% if news.slug %}
 
-                            <a href="{% url 'news_detail' news.slug %}">
+                            <a href="{% url 'news_detail' news.id %}">
 
                                 {{ news.title }}
 
@@ -347,7 +347,7 @@
 
                             {% if news.slug %}
 
-                            <a href="{% url 'news_detail' news.slug %}">
+                            <a href="{% url 'news_detail' news.id %}">
 
                                 {{ news.title }}
 
@@ -419,7 +419,7 @@
 
                             {% if news.slug %}
 
-                            <a href="{% url 'news_detail' news.slug %}">
+                            <a href="{% url 'news_detail' news.id %}">
 
                                 {{ news.title }}
 
