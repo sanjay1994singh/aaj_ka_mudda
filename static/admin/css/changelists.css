@@ -390,3 +390,22 @@
     min-width: 250px !important;
     line-height: 1.6 !important;
 }
+
+.change-list #content-main {
+    width: 100% !important;
+    overflow-x: auto;
+}
+
+#changelist-form .results {
+    overflow-x: auto;
+}
+
+#result_list {
+    min-width: 1000px !important;
+}
+
+#result_list td a {
+    min-width: 300px !important;
+    display: inline-block !important;
+    white-space: normal !important;
+}
