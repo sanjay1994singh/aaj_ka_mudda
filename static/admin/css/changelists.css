@@ -369,3 +369,24 @@
 #changelist .actions .button:focus, #changelist .actions .button:hover {
     border-color: var(--body-quiet-color);
 }
+
+/*---------------extra add css ---------*/
+/* Fix vertical title text issue */
+#result_list {
+    table-layout: auto !important;
+    width: 100% !important;
+}
+
+#result_list td,
+#result_list th {
+    white-space: normal !important;
+    word-break: normal !important;
+    overflow-wrap: break-word !important;
+}
+
+#result_list td a {
+    writing-mode: horizontal-tb !important;
+    display: inline-block !important;
+    min-width: 250px !important;
+    line-height: 1.6 !important;
+}
