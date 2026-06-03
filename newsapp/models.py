@@ -74,11 +74,11 @@ class News(models.Model):
 
     tags = TaggableManager(blank=True)
 
-    meta_title = models.CharField(max_length=255)
+    meta_title = models.CharField(max_length=255, null=True, blank=True)
 
-    meta_description = models.TextField()
+    meta_description = models.TextField(null=True, blank=True)
 
-    keywords = models.CharField(max_length=255)
+    keywords = models.CharField(max_length=255, null=True, blank=True)
 
     is_breaking = models.BooleanField(default=False)
 
