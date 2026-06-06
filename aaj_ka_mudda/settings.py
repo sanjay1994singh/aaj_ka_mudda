@@ -75,10 +75,21 @@ WSGI_APPLICATION = 'aaj_ka_mudda.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'mbdb/db.sqlite3',
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'mbdb/db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'aajkamudda',
+        'USER': 'manoj',
+        'PASSWORD': 'Hello12345678#$@',
+        'HOST': '103.168.19.9',
+        'PORT': '3306',
     }
 }
 
@@ -115,10 +126,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-# STATICFILES_DIRS = [
-#     BASE_DIR / 'static'
-# ]
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATICFILES_DIRS = [
+    BASE_DIR / 'static'
+]
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
