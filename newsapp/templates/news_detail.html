@@ -1,80 +1,533 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}
-{{ news.meta_title }}
+{{ news.title }} | आज का मुद्दा
 {% endblock %}
 
 {% block meta_description %}
-{{ news.meta_description }}
+{{ news.short_description|default:news.title|truncatechars:160 }}
 {% endblock %}
 
-{% block keywords %}
-{{ news.keywords }}
-{% endblock %}
+{% block css %}
+<style>
+    .detail-layout{
+        margin-top:25px;
+    }
 
-{% block og_title %}
-{{ news.title }}
-{% endblock %}
+    .article-box{
+        background:#fff;
+        border:1px solid var(--border);
+        border-radius:24px;
+        padding:26px;
+    }
 
-{% block og_description %}
-{{ news.meta_description }}
-{% endblock %}
+    .breadcrumb-text{
+        color:var(--muted);
+        font-size:14px;
+        margin-bottom:14px;
+    }
 
-{% block og_image %}
-{{ news.image.url }}
-{% endblock %}
+    .detail-category{
+        display:inline-block;
+        background:#fff1f2;
+        color:var(--red);
+        border-radius:30px;
+        padding:6px 14px;
+        font-size:13px;
+        font-weight:900;
+        margin-bottom:14px;
+    }
 
+    .detail-title{
+        font-size:44px;
+        font-weight:900;
+        line-height:1.3;
+        color:var(--navy);
+        margin-bottom:14px;
+    }
+
+    .detail-desc{
+        font-size:22px;
+        color:#475569;
+        line-height:1.6;
+        font-weight:700;
+    }
+
+    .detail-meta{
+        color:var(--muted);
+        border-top:1px solid var(--border);
+        border-bottom:1px solid var(--border);
+        padding:14px 0;
+        margin:18px 0;
+        font-size:14px;
+    }
+
+    .share-row{
+        display:flex;
+        gap:10px;
+        flex-wrap:wrap;
+        margin:18px 0;
+    }
+
+    .share-row a{
+        color:#fff;
+        border-radius:30px;
+        padding:9px 18px;
+        font-size:14px;
+        font-weight:900;
+    }
+
+    .share-wa{background:#25D366;}
+    .share-fb{background:#1877F2;}
+    .share-x{background:#111827;}
+    .share-copy{background:var(--red);}
+
+    .detail-image{
+        width:100%;
+        max-height:520px;
+        object-fit:cover;
+        border-radius:20px;
+        margin:18px 0;
+    }
+
+    .article-content{
+        font-size:20px;
+        line-height:1.95;
+        color:#1f2937;
+        font-weight:600;
+    }
+
+    .article-content p{
+        margin-bottom:20px;
+    }
+
+    .article-content h2,
+    .article-content h3{
+        color:var(--navy);
+        font-weight:900;
+        margin-top:30px;
+        margin-bottom:14px;
+    }
+
+    .inside-ad{
+        background:#f8fafc;
+        border:1px dashed #cbd5e1;
+        border-radius:18px;
+        padding:24px;
+        text-align:center;
+        color:#64748b;
+        margin:28px 0;
+        font-weight:900;
+    }
+
+    .author-box{
+        background:#f8fafc;
+        border-left:6px solid var(--red);
+        border-radius:14px;
+        padding:18px;
+        margin-top:28px;
+    }
+
+    .tag-box{
+        margin-top:25px;
+    }
+
+    .tag-box span{
+        display:inline-block;
+        background:#eef2ff;
+        color:var(--navy);
+        border-radius:30px;
+        padding:8px 15px;
+        margin:5px;
+        font-size:14px;
+        font-weight:900;
+    }
+
+    .sidebar-box{
+        background:#fff;
+        border:1px solid var(--border);
+        border-radius:22px;
+        padding:18px;
+        margin-bottom:22px;
+    }
+
+    .sidebar-heading{
+        font-size:24px;
+        font-weight:900;
+        color:var(--navy);
+        border-bottom:4px solid var(--red);
+        padding-bottom:10px;
+        margin-bottom:12px;
+    }
+
+    .related-item{
+        display:flex;
+        gap:13px;
+        border-bottom:1px solid var(--border);
+        padding:14px 0;
+    }
+
+    .related-item:last-child{
+        border-bottom:none;
+    }
+
+    .related-item img{
+        width:125px;
+        height:82px;
+        object-fit:cover;
+        border-radius:12px;
+    }
+
+    .related-item h4{
+        font-size:17px;
+        font-weight:900;
+        line-height:1.45;
+        margin:0;
+    }
+
+    .related-grid-card{
+        background:#fff;
+        border:1px solid var(--border);
+        border-radius:18px;
+        overflow:hidden;
+        height:100%;
+    }
+
+    .related-grid-card img{
+        width:100%;
+        height:170px;
+        object-fit:cover;
+    }
+
+    .related-grid-card .p-3 h4{
+        font-size:19px;
+        font-weight:900;
+        line-height:1.45;
+    }
+
+    @media(max-width:768px){
+        .article-box{
+            padding:18px;
+        }
+
+        .detail-title{
+            font-size:30px;
+        }
+
+        .detail-desc{
+            font-size:18px;
+        }
+
+        .article-content{
+            font-size:18px;
+        }
+
+        .detail-image{
+            max-height:300px;
+        }
+    }
+</style>
+{% endblock %}
 
 {% block content %}
 
-<div class="container py-5">
+<div class="ad-box">
+    Advertisement Space 970x250
+</div>
 
-    <div class="row">
+<div class="row g-4 detail-layout">
 
-        <div class="col-lg-8">
+    <main class="col-lg-8">
 
-            <h1 class="mb-3">
+        <article class="article-box">
+
+            <div class="breadcrumb-text">
+                होम / {{ news.category.name|default:"समाचार" }} / {{ news.title|truncatechars:45 }}
+            </div>
+
+            <div class="detail-category">
+                {{ news.category.name|default:"ताजा खबर" }}
+            </div>
+
+            <h1 class="detail-title">
                 {{ news.title }}
             </h1>
 
-            <img src="{{ news.image.url }}" class="img-fluid rounded mb-4">
+            {% if news.short_description %}
+            <p class="detail-desc">
+                {{ news.short_description }}
+            </p>
+            {% endif %}
 
-            <div class="social-share mb-4">
+            <div class="detail-meta">
+                आज का मुद्दा डिजिटल डेस्क |
+                Updated:
+                {{ news.updated_at|date:"d M Y, h:i A" }}
+                |
+                Views:
+                {{ news.views|default:"0" }}
+            </div>
 
-                <a class="btn btn-success"
-                   href="https://wa.me/?text={{ request.build_absolute_uri }}">
+            <div class="share-row">
+
+                <a class="share-wa"
+                   target="_blank"
+                   href="https://api.whatsapp.com/send?text={{ news.title }}%20{{ request.build_absolute_uri }}">
                     WhatsApp
                 </a>
 
-                <a class="btn btn-primary"
+                <a class="share-fb"
+                   target="_blank"
                    href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}">
                     Facebook
                 </a>
 
-                <a class="btn btn-info"
-                   href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri }}">
-                    Twitter
+                <a class="share-x"
+                   target="_blank"
+                   href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri }}&text={{ news.title }}">
+                    X
+                </a>
+
+                <a class="share-copy"
+                   href="javascript:void(0)"
+                   onclick="navigator.clipboard.writeText(window.location.href);alert('Link copied')">
+                    Copy Link
                 </a>
 
             </div>
 
-            <div class="content-area">
+            {% if news.image %}
+            <img src="{{ news.image.url }}"
+                 alt="{{ news.title }}"
+                 class="detail-image">
+            {% else %}
+            <img src="https://picsum.photos/900/520?random=200"
+                 alt="{{ news.title }}"
+                 class="detail-image">
+            {% endif %}
+
+            <div class="article-content">
+
+                {% if news.content %}
                 {{ news.content|safe }}
+                {% else %}
+
+                <p>
+                    आज का मुद्दा की इस खास रिपोर्ट में हम आपको इस पूरे मामले की जानकारी विस्तार से बता रहे हैं।
+                    यह मुद्दा आम लोगों से जुड़ा हुआ है और स्थानीय स्तर पर लगातार चर्चा का विषय बना हुआ है।
+                </p>
+
+                <p>
+                    स्थानीय लोगों का कहना है कि इस मामले पर प्रशासन को तुरंत ध्यान देना चाहिए।
+                    लोगों की मांग है कि समस्या का समाधान समय रहते किया जाए, ताकि आम जनता को परेशानी न हो।
+                </p>
+
+                <h2>
+                    प्रशासन ने क्या कहा?
+                </h2>
+
+                <p>
+                    अधिकारियों के अनुसार, मामले की जानकारी मिलते ही संबंधित विभागों को निर्देश दिए गए हैं।
+                    स्थिति पर लगातार निगरानी रखी जा रही है और जरूरत पड़ने पर सख्त कार्रवाई की जाएगी।
+                </p>
+
+                <div class="inside-ad">
+                    Advertisement Space 728x90
+                </div>
+
+                <h2>
+                    आम लोगों पर क्या असर पड़ेगा?
+                </h2>
+
+                <p>
+                    इस घटना या फैसले का असर सीधे तौर पर स्थानीय लोगों, व्यापारियों और आम नागरिकों पर पड़ सकता है।
+                    लोगों का कहना है कि व्यवस्था को बेहतर बनाने के लिए ठोस कदम उठाए जाने चाहिए।
+                </p>
+
+                <p>
+                    फिलहाल प्रशासनिक स्तर पर समीक्षा जारी है। आने वाले समय में इस मामले से जुड़ा बड़ा अपडेट सामने आ सकता
+                    है।
+                </p>
+
+                {% endif %}
+
+            </div>
+
+            <div class="tag-box">
+                <span>आज का मुद्दा</span>
+                <span>Hindi News</span>
+                <span>Breaking News</span>
+                <span>{{ news.category.name|default:"News" }}</span>
+            </div>
+
+            <div class="author-box">
+                <h4 class="fw-bold mb-2">
+                    Author: आज का मुद्दा डिजिटल डेस्क
+                </h4>
+                <p class="mb-0">
+                    आज का मुद्दा जनता से जुड़े मुद्दों, स्थानीय खबरों और देश-दुनिया की महत्वपूर्ण खबरों को प्रमुखता से
+                    प्रकाशित करता है।
+                </p>
+            </div>
+
+        </article>
+
+        <div class="section-title">
+            <span></span>
+            <h2>संबंधित खबरें</h2>
+        </div>
+
+        <div class="row g-4">
+
+            {% for item in related_news %}
+            <div class="col-md-6">
+
+                <a href="{% url 'news_detail' item.slug %}">
+                    <div class="related-grid-card">
+
+                        {% if item.image %}
+                        <img src="{{ item.image.url }}" alt="{{ item.title }}">
+                        {% else %}
+                        <img src="https://picsum.photos/400/260?random={{ forloop.counter|add:300 }}" alt="">
+                        {% endif %}
+
+                        <div class="p-3">
+                            <span class="badge-cat">
+                                {{ item.category.name|default:"NEWS" }}
+                            </span>
+                            <h4 class="mt-2">
+                                {{ item.title|truncatechars:85 }}
+                            </h4>
+                        </div>
+
+                    </div>
+                </a>
+
+            </div>
+            {% empty %}
+
+            <div class="col-md-6">
+                <div class="related-grid-card">
+                    <img src="https://picsum.photos/400/260?random=301" alt="">
+                    <div class="p-3">
+                        <span class="badge-cat">उत्तर प्रदेश</span>
+                        <h4 class="mt-2">प्रदेश में प्रशासन ने सुरक्षा व्यवस्था को लेकर जारी किए निर्देश</h4>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="related-grid-card">
+                    <img src="https://picsum.photos/400/260?random=302" alt="">
+                    <div class="p-3">
+                        <span class="badge-cat">लोकल न्यूज़</span>
+                        <h4 class="mt-2">स्थानीय लोगों ने समस्या के समाधान की मांग उठाई</h4>
+                    </div>
+                </div>
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </main>
+
+    <aside class="col-lg-4">
+
+        <div class="sidebar-box">
+            <div class="sidebar-heading">
+                ताजा खबरें
+            </div>
+
+            {% for item in latest_news %}
+            <a href="{% url 'news_detail' item.slug %}">
+                <div class="related-item">
+
+                    {% if item.image %}
+                    <img src="{{ item.image.url }}" alt="{{ item.title }}">
+                    {% else %}
+                    <img src="https://picsum.photos/220/140?random={{ forloop.counter|add:100 }}" alt="">
+                    {% endif %}
+
+                    <div>
+                        <span class="badge-cat">
+                            {{ item.category.name|default:"NEWS" }}
+                        </span>
+                        <h4 class="mt-2">
+                            {{ item.title|truncatechars:70 }}
+                        </h4>
+                    </div>
+
+                </div>
+            </a>
+            {% empty %}
+
+            <div class="related-item">
+                <img src="https://picsum.photos/220/140?random=401" alt="">
+                <div>
+                    <span class="badge-cat">मथुरा</span>
+                    <h4 class="mt-2">मथुरा-वृंदावन में ट्रैफिक व्यवस्था को लेकर बड़ा अपडेट</h4>
+                </div>
+            </div>
+
+            <div class="related-item">
+                <img src="https://picsum.photos/220/140?random=402" alt="">
+                <div>
+                    <span class="badge-cat">अपराध</span>
+                    <h4 class="mt-2">साइबर ठगी से बचने के लिए पुलिस ने जारी की एडवाइजरी</h4>
+                </div>
+            </div>
+
+            <div class="related-item">
+                <img src="https://picsum.photos/220/140?random=403" alt="">
+                <div>
+                    <span class="badge-cat">मौसम</span>
+                    <h4 class="mt-2">उत्तर प्रदेश में मौसम बदलने के संकेत, बारिश की संभावना</h4>
+                </div>
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+        <div class="ad-box">
+            Advertisement Space 300x250
+        </div>
+
+        <div class="sidebar-box">
+            <div class="sidebar-heading">
+                लोकप्रिय खबरें
+            </div>
+
+            <div class="related-item">
+                <img src="https://picsum.photos/220/140?random=501" alt="">
+                <div>
+                    <span class="badge-cat">Trending</span>
+                    <h4 class="mt-2">वृंदावन में श्रद्धालुओं की भीड़, सुरक्षा व्यवस्था सख्त</h4>
+                </div>
+            </div>
+
+            <div class="related-item">
+                <img src="https://picsum.photos/220/140?random=502" alt="">
+                <div>
+                    <span class="badge-cat">Popular</span>
+                    <h4 class="mt-2">सरकार की नई योजना से आम लोगों को मिल सकती है राहत</h4>
+                </div>
+            </div>
+
+            <div class="related-item">
+                <img src="https://picsum.photos/220/140?random=503" alt="">
+                <div>
+                    <span class="badge-cat">Crime</span>
+                    <h4 class="mt-2">क्राइम कंट्रोल को लेकर पुलिस ने बनाया नया प्लान</h4>
+                </div>
             </div>
 
         </div>
 
-        <div class="col-lg-4">
+    </aside>
 
-            {% include 'includes/sidebar.html' %}
-
-            <h4 class="mt-5 mb-4">
-                Related News
-            </h4>
-
-        </div>
-
-    </div>
 </div>
 
 {% endblock %}
