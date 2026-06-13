@@ -2,6 +2,171 @@
 
 {% block title %}आज का मुद्दा | Latest Hindi News{% endblock %}
 
+{% block css %}
+
+<style>
+
+    .three-column-news{
+        background:#fff;
+        border-radius:24px;
+        padding:25px;
+        margin:50px 0;
+        border:1px solid var(--border);
+    }
+
+    .column-header{
+        font-size:32px;
+        font-weight:900;
+        color:var(--navy);
+        margin-bottom:20px;
+    }
+
+    .column-news{
+        display:flex;
+        gap:16px;
+        padding:18px 0;
+        border-bottom:1px solid #e5e7eb;
+    }
+
+    .column-news:last-child{
+        border-bottom:none;
+    }
+
+    .column-news img{
+        width:150px;
+        height:95px;
+        object-fit:cover;
+        border-radius:12px;
+    }
+
+    .column-news h4{
+        font-size:20px;
+        line-height:1.5;
+        font-weight:900;
+        margin-bottom:8px;
+    }
+
+    .news-cat{
+        color:var(--red);
+        font-size:14px;
+        font-weight:900;
+    }
+
+    @media(max-width:991px){
+
+        .column-header{
+            margin-top:25px;
+            font-size:24px;
+        }
+
+        .column-news img{
+            width:120px;
+            height:80px;
+        }
+
+        .column-news h4{
+            font-size:17px;
+        }
+
+    }
+
+</style>
+
+<style>
+    .short-video-section{
+        margin:50px 0;
+        padding-top:25px;
+        border-top:2px solid #111;
+    }
+
+    .short-video-grid{
+        display:grid;
+        grid-template-columns:repeat(5,1fr);
+        gap:24px;
+    }
+
+    .short-video-card{
+        position:relative;
+        height:470px;
+        border-radius:18px;
+        overflow:hidden;
+        background:#7a0000;
+        box-shadow:0 8px 25px rgba(0,0,0,.18);
+    }
+
+    .short-video-card img{
+        width:100%;
+        height:100%;
+        object-fit:cover;
+    }
+
+    .short-video-card::after{
+        content:"";
+        position:absolute;
+        left:0;
+        right:0;
+        bottom:0;
+        height:45%;
+        background:linear-gradient(to top,#850000 20%,rgba(133,0,0,.85),transparent);
+    }
+
+    .play-btn{
+        position:absolute;
+        top:46%;
+        left:50%;
+        transform:translate(-50%,-50%);
+        width:54px;
+        height:42px;
+        border-radius:12px;
+        background:#e62117;
+        color:#fff;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        font-size:22px;
+        z-index:2;
+    }
+
+    .short-video-title{
+        position:absolute;
+        left:16px;
+        right:16px;
+        bottom:55px;
+        color:#fff;
+        font-size:22px;
+        font-weight:900;
+        line-height:1.35;
+        z-index:2;
+        text-shadow:0 2px 6px rgba(0,0,0,.4);
+    }
+
+    @media(max-width:1200px){
+        .short-video-grid{
+            grid-template-columns:repeat(3,1fr);
+        }
+    }
+
+    @media(max-width:768px){
+        .short-video-grid{
+            display:flex;
+            overflow-x:auto;
+            gap:16px;
+            padding-bottom:10px;
+        }
+
+        .short-video-card{
+            min-width:230px;
+            height:410px;
+        }
+
+        .short-video-title{
+            font-size:18px;
+        }
+    }
+</style>
+
+{% endblock %}
+
 {% block content %}
 
 <div class="ad-box">
@@ -258,6 +423,223 @@
     </div>
 
 </div>
+
+<section class="short-video-section">
+
+    <div class="section-title">
+        <span></span>
+        <h2>शॉर्ट वीडियो</h2>
+    </div>
+
+    <div class="short-video-grid">
+
+        <div class="short-video-card">
+            <img src="https://picsum.photos/320/520?random=201" alt="">
+            <div class="play-btn">▶</div>
+            <div class="short-video-title">
+                जनता के सवालों पर नेता जी का बड़ा बयान
+            </div>
+        </div>
+
+        <div class="short-video-card">
+            <img src="https://picsum.photos/320/520?random=202" alt="">
+            <div class="play-btn">▶</div>
+            <div class="short-video-title">
+                पुलिस कार्रवाई पर स्थानीय लोगों की प्रतिक्रिया
+            </div>
+        </div>
+
+        <div class="short-video-card">
+            <img src="https://picsum.photos/320/520?random=203" alt="">
+            <div class="play-btn">▶</div>
+            <div class="short-video-title">
+                पत्रकारों से बातचीत में बड़ा खुलासा
+            </div>
+        </div>
+
+        <div class="short-video-card">
+            <img src="https://picsum.photos/320/520?random=204" alt="">
+            <div class="play-btn">▶</div>
+            <div class="short-video-title">
+                वायरल वीडियो पर प्रशासन ने लिया संज्ञान
+            </div>
+        </div>
+
+        <div class="short-video-card">
+            <img src="https://picsum.photos/320/520?random=205" alt="">
+            <div class="play-btn">▶</div>
+            <div class="short-video-title">
+                विमान हादसे पर सामने आई बड़ी जानकारी
+            </div>
+        </div>
+
+    </div>
+
+</section>
+
+<section class="three-column-news">
+
+    <div class="section-title">
+        <span></span>
+        <h2>देश • राजनीति • दुनिया</h2>
+    </div>
+
+    <div class="row g-0">
+
+        <!-- NATIONAL -->
+
+        <div class="col-lg-4 border-end pe-lg-4">
+
+            <div class="column-header">
+                राष्ट्रीय न्यूज़ →
+            </div>
+
+            <div class="column-news">
+                <img src="https://picsum.photos/300/200?random=101">
+                <div>
+                    <h4>
+                        देश में शहरी विकास का नया अध्याय, राष्ट्रीय सम्मेलन में जुटे विशेषज्ञ
+                    </h4>
+                    <span class="news-cat">NEWS</span>
+                </div>
+            </div>
+
+            <div class="column-news">
+                <img src="https://picsum.photos/300/200?random=102">
+                <div>
+                    <h4>
+                        जनसंख्या रिपोर्ट में चौंकाने वाले आंकड़े, बुजुर्ग आबादी तेजी से बढ़ी
+                    </h4>
+                    <span class="news-cat">NEWS</span>
+                </div>
+            </div>
+
+            <div class="column-news">
+                <img src="https://picsum.photos/300/200?random=103">
+                <div>
+                    <h4>
+                        एयरफोर्स के AN-32 विमान दुर्घटना में शहीद जवानों को श्रद्धांजलि
+                    </h4>
+                    <span class="news-cat">NEWS</span>
+                </div>
+            </div>
+
+            <div class="column-news">
+                <img src="https://picsum.photos/300/200?random=104">
+                <div>
+                    <h4>
+                        प्रधानमंत्री G-7 सम्मेलन में कई वैश्विक नेताओं से करेंगे मुलाकात
+                    </h4>
+                    <span class="news-cat">NEWS</span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- POLITICS -->
+
+        <div class="col-lg-4 border-end pe-lg-4 ps-lg-4">
+
+            <div class="column-header">
+                पॉलिटिक्स →
+            </div>
+
+            <div class="column-news">
+                <img src="https://picsum.photos/300/200?random=105">
+                <div>
+                    <h4>
+                        दिल्ली धरने पर उपमुख्यमंत्री का बड़ा बयान, सियासत तेज
+                    </h4>
+                    <span class="news-cat">POLITICS</span>
+                </div>
+            </div>
+
+            <div class="column-news">
+                <img src="https://picsum.photos/300/200?random=106">
+                <div>
+                    <h4>
+                        लोकतंत्र को मजबूत करने के लिए विपक्ष ने केंद्र सरकार पर साधा निशाना
+                    </h4>
+                    <span class="news-cat">POLITICS</span>
+                </div>
+            </div>
+
+            <div class="column-news">
+                <img src="https://picsum.photos/300/200?random=107">
+                <div>
+                    <h4>
+                        जम्मू-कश्मीर के मुद्दे पर संसद में गरमाई बहस
+                    </h4>
+                    <span class="news-cat">POLITICS</span>
+                </div>
+            </div>
+
+            <div class="column-news">
+                <img src="https://picsum.photos/300/200?random=108">
+                <div>
+                    <h4>
+                        राज्यसभा में विपक्ष और सरकार के बीच तीखी नोकझोंक
+                    </h4>
+                    <span class="news-cat">POLITICS</span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- WORLD -->
+
+        <div class="col-lg-4 ps-lg-4">
+
+            <div class="column-header">
+                दुनिया →
+            </div>
+
+            <div class="column-news">
+                <img src="https://picsum.photos/300/200?random=109">
+                <div>
+                    <h4>
+                        ईरान ने मध्य पूर्व में नई रणनीति का किया ऐलान
+                    </h4>
+                    <span class="news-cat">WORLD</span>
+                </div>
+            </div>
+
+            <div class="column-news">
+                <img src="https://picsum.photos/300/200?random=110">
+                <div>
+                    <h4>
+                        श्रीलंका एयरलाइंस की उड़ान पर बिजली गिरने के बाद सुरक्षित लैंडिंग
+                    </h4>
+                    <span class="news-cat">WORLD</span>
+                </div>
+            </div>
+
+            <div class="column-news">
+                <img src="https://picsum.photos/300/200?random=111">
+                <div>
+                    <h4>
+                        बच्चों के स्क्रीन टाइम पर WHO ने जारी की नई चेतावनी
+                    </h4>
+                    <span class="news-cat">WORLD</span>
+                </div>
+            </div>
+
+            <div class="column-news">
+                <img src="https://picsum.photos/300/200?random=112">
+                <div>
+                    <h4>
+                        अमेरिका और चीन के बीच व्यापार तनाव फिर बढ़ा
+                    </h4>
+                    <span class="news-cat">WORLD</span>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
 
 <div class="ad-box">
     Advertisement Space 728x90
