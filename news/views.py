@@ -9,20 +9,36 @@ def home(request):
         status='published'
     )[:10]
 
-    featured_news = NewsArticle.objects.filter(
-        is_featured=True,
-        status='published'
-    )[:8]
-
     latest_news = NewsArticle.objects.filter(
         status='published'
-    ).order_by('-created_at')[:20]
+    ).order_by('-created_at')
+
+    up_news = NewsArticle.objects.filter(
+        status='published',
+        category_id=3
+    ).select_related(
+        'category'
+    ).order_by('-id')[:6]
+
+    politics_news = NewsArticle.objects.filter(
+        status='published',
+        category_id=4
+    ).select_related(
+        'category'
+    ).order_by('-created_at')[:4]
+
+    featured_news = latest_news.first()
+
+    side_news = latest_news[1:5]
 
     categories = Category.objects.all()
     context = {
         'breaking_news': breaking_news,
         'featured_news': featured_news,
+        'side_news': side_news,
         'latest_news': latest_news,
+        'up_news': up_news,
+        'politics_news': politics_news,
         'categories': categories,
     }
 

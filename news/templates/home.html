@@ -175,55 +175,84 @@
 
 <section class="row g-4">
 
+    <!-- Main Hero News -->
+
     <div class="col-lg-7">
-        <div class="hero-card">
-            <img src="https://picsum.photos/900/520?random=11" alt="मुख्य खबर">
-            <div class="hero-content">
-                <span class="badge-cat">मुख्य खबर</span>
-                <h1>
-                    वृंदावन में श्रद्धालुओं की सुरक्षा को लेकर बड़ा फैसला, प्रशासन ने बनाई नई कार्ययोजना
-                </h1>
-                <p class="text-muted">
-                    भीड़ नियंत्रण, यातायात व्यवस्था और मंदिर क्षेत्र की सुरक्षा को लेकर अधिकारियों ने समीक्षा बैठक की।
-                </p>
-                <div class="news-meta">आज का मुद्दा डिजिटल डेस्क • 35 मिनट पहले</div>
+
+        {% if featured_news %}
+
+        <a href="{% url 'news_detail' featured_news.slug %}">
+
+            <div class="hero-card">
+
+                {% if featured_news.image %}
+                <img src="{{ featured_news.image.url }}"
+                     alt="{{ featured_news.title }}">
+                {% endif %}
+
+                <div class="hero-content">
+
+                    <span class="badge-cat">
+                        {{ featured_news.category.name }}
+                    </span>
+
+                    <h1>
+                        {{ featured_news.title }}
+                    </h1>
+
+                    {% if featured_news.short_description %}
+                    <p class="text-muted">
+                        {{ featured_news.short_description|truncatechars:150 }}
+                    </p>
+                    {% endif %}
+
+                    <div class="news-meta">
+                        आज का मुद्दा डिजिटल डेस्क •
+                        {{ featured_news.created_at|timesince }} पहले
+                    </div>
+
+                </div>
+
             </div>
-        </div>
+
+        </a>
+
+        {% endif %}
+
     </div>
+
+    <!-- Right Side News -->
 
     <div class="col-lg-5">
 
-        <div class="side-news">
-            <img src="https://picsum.photos/300/200?random=12" alt="">
-            <div>
-                <span class="badge-cat">अपराध</span>
-                <h4>साइबर ठगी के मामले में पुलिस ने जारी की नई एडवाइजरी</h4>
-            </div>
-        </div>
+        {% for news in side_news %}
 
-        <div class="side-news">
-            <img src="https://picsum.photos/300/200?random=13" alt="">
-            <div>
-                <span class="badge-cat">उत्तर प्रदेश</span>
-                <h4>लखनऊ में विकास कार्यों की समीक्षा, अधिकारियों को निर्देश</h4>
-            </div>
-        </div>
+        <a href="{% url 'news_detail' news.slug %}">
 
-        <div class="side-news">
-            <img src="https://picsum.photos/300/200?random=14" alt="">
-            <div>
-                <span class="badge-cat">मथुरा</span>
-                <h4>यमुना किनारे सफाई अभियान, स्थानीय लोगों ने की सराहना</h4>
-            </div>
-        </div>
+            <div class="side-news">
 
-        <div class="side-news">
-            <img src="https://picsum.photos/300/200?random=15" alt="">
-            <div>
-                <span class="badge-cat">राजनीति</span>
-                <h4>स्थानीय मुद्दों पर जनप्रतिनिधियों से जवाब मांग रही जनता</h4>
+                {% if news.image %}
+                <img src="{{ news.image.url }}"
+                     alt="{{ news.title }}">
+                {% endif %}
+
+                <div>
+
+                    <span class="badge-cat">
+                        {{ news.category.name }}
+                    </span>
+
+                    <h4>
+                        {{ news.title|truncatechars:75 }}
+                    </h4>
+
+                </div>
+
             </div>
-        </div>
+
+        </a>
+
+        {% endfor %}
 
     </div>
 
@@ -340,87 +369,100 @@
 
 <div class="row g-4">
 
+    {% for news in up_news %}
+
     <div class="col-md-4">
-        <div class="news-card">
-            <img src="https://picsum.photos/500/320?random=41" alt="">
-            <div class="news-body">
-                <span class="badge-cat">UP News</span>
-                <h3>प्रदेश में विकास योजनाओं की रफ्तार तेज, अधिकारियों को निर्देश</h3>
-                <div class="news-meta">आज</div>
+        <a href="{% url 'news_detail' news.slug %}">
+            <div class="news-card">
+
+                {% if news.image_big %}
+                <img src="/media/{{ news.image_big }}" alt="{{ news.title }}">
+                {% elif news.image %}
+                <img src="{{ news.image.url }}" alt="{{ news.title }}">
+                {% else %}
+                <img src="https://picsum.photos/500/320?random={{ forloop.counter|add:40 }}" alt="">
+                {% endif %}
+
+                <div class="news-body">
+                    <span class="badge-cat">
+                        {{ news.category.name }}
+                    </span>
+
+                    <h3>
+                        {{ news.title|truncatechars:80 }}
+                    </h3>
+
+                    <div class="news-meta">
+                        {{ news.created_at|timesince }} पहले
+                    </div>
+                </div>
+
             </div>
+        </a>
+    </div>
+
+    {% empty %}
+
+    <div class="col-12">
+        <div class="ad-box">
+            उत्तर प्रदेश category में अभी कोई खबर नहीं है।
         </div>
     </div>
 
-    <div class="col-md-4">
-        <div class="news-card">
-            <img src="https://picsum.photos/500/320?random=42" alt="">
-            <div class="news-body">
-                <span class="badge-cat">Politics</span>
-                <h3>स्थानीय चुनाव को लेकर राजनीतिक दलों ने शुरू की तैयारी</h3>
-                <div class="news-meta">आज</div>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-4">
-        <div class="news-card">
-            <img src="https://picsum.photos/500/320?random=43" alt="">
-            <div class="news-body">
-                <span class="badge-cat">Crime</span>
-                <h3>पुलिस ने चलाया चेकिंग अभियान, संदिग्धों से पूछताछ</h3>
-                <div class="news-meta">आज</div>
-            </div>
-        </div>
-    </div>
+    {% endfor %}
 
 </div>
 
 <div class="section-title">
     <span></span>
-    <h2>ब्रज समाचार</h2>
+    <h2>राजनीति</h2>
 </div>
 
 <div class="row g-4">
 
+    {% for news in politics_news %}
+
     <div class="col-md-6">
-        <div class="side-news">
-            <img src="https://picsum.photos/300/200?random=51" alt="">
-            <div>
-                <span class="badge-cat">वृंदावन</span>
-                <h4>मंदिर क्षेत्र में श्रद्धालुओं की सुविधा के लिए नई व्यवस्था</h4>
+
+        <a href="{% url 'news_detail' news.slug %}">
+
+            <div class="side-news">
+
+                {% if news.image %}
+                <img src="{{ news.image.url }}"
+                     alt="{{ news.title }}">
+                {% else %}
+                <img src="https://picsum.photos/300/200?random={{ forloop.counter|add:60 }}"
+                     alt="">
+                {% endif %}
+
+                <div>
+
+                    <span class="badge-cat">
+                        {{ news.category.name }}
+                    </span>
+
+                    <h4>
+                        {{ news.title|truncatechars:90 }}
+                    </h4>
+
+                </div>
+
             </div>
+
+        </a>
+
+    </div>
+
+    {% empty %}
+
+    <div class="col-12">
+        <div class="ad-box">
+            राजनीति category में अभी कोई खबर उपलब्ध नहीं है।
         </div>
     </div>
 
-    <div class="col-md-6">
-        <div class="side-news">
-            <img src="https://picsum.photos/300/200?random=52" alt="">
-            <div>
-                <span class="badge-cat">मथुरा</span>
-                <h4>स्थानीय व्यापारियों ने प्रशासन से रखी अपनी मांग</h4>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-6">
-        <div class="side-news">
-            <img src="https://picsum.photos/300/200?random=53" alt="">
-            <div>
-                <span class="badge-cat">गोवर्धन</span>
-                <h4>परिक्रमा मार्ग पर सफाई और सुरक्षा व्यवस्था को लेकर निरीक्षण</h4>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-6">
-        <div class="side-news">
-            <img src="https://picsum.photos/300/200?random=54" alt="">
-            <div>
-                <span class="badge-cat">बरसाना</span>
-                <h4>त्योहारों को लेकर प्रशासनिक तैयारियां तेज</h4>
-            </div>
-        </div>
-    </div>
+    {% endfor %}
 
 </div>
 
