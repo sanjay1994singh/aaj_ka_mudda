@@ -13,6 +13,13 @@ def home(request):
         status='published'
     ).order_by('-created_at')
 
+    delhi_ncr = NewsArticle.objects.filter(
+        status='published',
+        category_id=2
+    ).select_related(
+        'category'
+    ).order_by('-created_at')[:4]
+
     up_news = NewsArticle.objects.filter(
         status='published',
         category_id=3
@@ -37,6 +44,7 @@ def home(request):
         'featured_news': featured_news,
         'side_news': side_news,
         'latest_news': latest_news,
+        'delhi_ncr': delhi_ncr,
         'up_news': up_news,
         'politics_news': politics_news,
         'categories': categories,
