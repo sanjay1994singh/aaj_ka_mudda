@@ -188,6 +188,9 @@
                 {% if featured_news.image %}
                 <img src="{{ featured_news.image.url }}"
                      alt="{{ featured_news.title }}">
+                {% else %}
+                <img src="https://picsum.photos/400/260?random={{ forloop.counter }}"
+                     alt="">
                 {% endif %}
 
                 <div class="hero-content">
@@ -234,6 +237,9 @@
                 {% if news.image %}
                 <img src="{{ news.image.url }}"
                      alt="{{ news.title }}">
+                {% else %}
+                <img src="https://picsum.photos/400/260?random={{ forloop.counter }}"
+                     alt="">
                 {% endif %}
 
                 <div>
@@ -384,7 +390,8 @@
                 {% elif news.image %}
                 <img src="{{ news.image.url }}" alt="{{ news.title }}">
                 {% else %}
-                <img src="https://picsum.photos/500/320?random={{ forloop.counter|add:40 }}" alt="">
+                <img src="https://picsum.photos/400/260?random={{ forloop.counter }}"
+                     alt="">
                 {% endif %}
 
                 <div class="news-body">
