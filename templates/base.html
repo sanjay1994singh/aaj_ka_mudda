@@ -335,18 +335,17 @@
 
 <nav class="main-menu">
     <div class="container">
-        <a href="#">होम</a>
-        <a href="#">ब्रेकिंग</a>
-        <a href="#">उत्तर प्रदेश</a>
-        <a href="#">ब्रज समाचार</a>
-        <a href="#">राजनीति</a>
-        <a href="#">अपराध</a>
-        <a href="#">देश</a>
-        <a href="#">बिजनेस</a>
-        <a href="#">खेल</a>
-        <a href="#">मनोरंजन</a>
-        <a href="#">वीडियो</a>
-        <a href="#">ई-पेपर</a>
+
+        <a href="{% url 'home' %}">
+            Home
+        </a>
+
+        {% for category in menu_categories|slice:":10" %}
+            <a href="{% url 'category_news' category.slug %}">
+                {{ category.name }}
+            </a>
+        {% endfor %}
+
     </div>
 </nav>
 

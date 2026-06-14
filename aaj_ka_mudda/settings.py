@@ -36,11 +36,36 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sitemaps',
+    'django_ckeditor_5',
 
-    'ckeditor',
-    'taggit',
-    'newsapp',
+    'accounts',
+    'category',
+    'news',
 ]
+
+CKEDITOR_5_CONFIGS = {
+    'default': {
+        'toolbar': [
+            'heading', '|',
+            'bold', 'italic', 'link',
+            'bulletedList', 'numberedList',
+            'blockQuote', 'imageUpload',
+            '|', 'undo', 'redo'
+        ],
+    },
+
+    'extends': {
+        'toolbar': [
+            'heading', '|',
+            'bold', 'italic', 'underline',
+            'strikethrough', 'link',
+            'bulletedList', 'numberedList',
+            'blockQuote', 'insertTable',
+            'imageUpload', 'mediaEmbed',
+            '|', 'undo', 'redo'
+        ],
+    }
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -64,7 +89,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'newsapp.context_processors.categories_processor',
+                'category.context_processors.categories_menu',
             ],
         },
     },
@@ -133,3 +158,4 @@ STATICFILES_DIRS = [
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+AUTH_USER_MODEL = 'accounts.User'

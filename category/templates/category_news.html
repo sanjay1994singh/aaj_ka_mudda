@@ -1,0 +1,145 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+{{ category.name }} News | आज का मुद्दा
+{% endblock %}
+
+{% block meta_description %}
+{{ category.name }} की ताजा खबरें, ब्रेकिंग न्यूज़ और अपडेट पढ़ें आज का मुद्दा पर।
+{% endblock %}
+
+{% block content %}
+
+<div class="ad-box">
+    Advertisement Space 970x250
+</div>
+
+<div class="section-title">
+    <span></span>
+    <h2>{{ category.name }}</h2>
+</div>
+
+{% if featured_news %}
+
+<section class="row g-4 mb-4">
+
+    <div class="col-lg-7">
+        <a href="{% url 'news_detail' featured_news.slug %}">
+            <div class="hero-card">
+
+                {% if featured_news.image %}
+                <img src="{{ featured_news.image.url }}" alt="{{ featured_news.title }}">
+                {% else %}
+                <img src="https://picsum.photos/900/520?random=11" alt="">
+                {% endif %}
+
+                <div class="hero-content">
+                    <span class="badge-cat">
+                        {{ category.name }}
+                    </span>
+
+                    <h1>
+                        {{ featured_news.title }}
+                    </h1>
+
+                    {% if featured_news.short_description %}
+                    <p class="text-muted">
+                        {{ featured_news.short_description|truncatechars:160 }}
+                    </p>
+                    {% endif %}
+
+                    <div class="news-meta">
+                        आज का मुद्दा डिजिटल डेस्क •
+                        {{ featured_news.created_at|timesince }} पहले
+                    </div>
+                </div>
+
+            </div>
+        </a>
+    </div>
+
+    <div class="col-lg-5">
+
+        {% for news in other_news|slice:":4" %}
+
+        <a href="{% url 'news_detail' news.slug %}">
+            <div class="side-news">
+
+                {% if news.image %}
+                <img src="{{ news.image.url }}" alt="{{ news.title }}">
+                {% else %}
+                <img src="https://picsum.photos/300/200?random={{ forloop.counter }}" alt="">
+                {% endif %}
+
+                <div>
+                    <span class="badge-cat">
+                        {{ category.name }}
+                    </span>
+
+                    <h4>
+                        {{ news.title|truncatechars:80 }}
+                    </h4>
+                </div>
+
+            </div>
+        </a>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+{% endif %}
+
+<div class="section-title">
+    <span></span>
+    <h2>{{ category.name }} की सभी खबरें</h2>
+</div>
+
+<div class="row g-4">
+
+    {% for news in other_news %}
+
+    <div class="col-md-6 col-lg-3">
+        <a href="{% url 'news_detail' news.slug %}">
+            <div class="news-card">
+
+                {% if news.image %}
+                <img src="{{ news.image.url }}" alt="{{ news.title }}">
+                {% else %}
+                <img src="https://picsum.photos/400/260?random={{ forloop.counter|add:20 }}" alt="">
+                {% endif %}
+
+                <div class="news-body">
+                    <span class="badge-cat">
+                        {{ category.name }}
+                    </span>
+
+                    <h3>
+                        {{ news.title|truncatechars:75 }}
+                    </h3>
+
+                    <div class="news-meta">
+                        {{ news.created_at|timesince }} पहले
+                    </div>
+                </div>
+
+            </div>
+        </a>
+    </div>
+
+    {% empty %}
+
+    <div class="col-12">
+        <div class="ad-box">
+            इस category में अभी कोई news publish नहीं हुई है।
+        </div>
+    </div>
+
+    {% endfor %}
+
+</div>
+
+{% endblock %}
