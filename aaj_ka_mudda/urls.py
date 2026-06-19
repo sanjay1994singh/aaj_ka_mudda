@@ -21,6 +21,10 @@ from django.conf.urls.static import static
 from django.contrib.sitemaps.views import sitemap
 from django.views.generic import TemplateView
 
+admin.site.site_header = "Aaj Ka Mudda Admin"
+admin.site.site_title = "Aaj Ka Mudda"
+admin.site.index_title = "Aaj Ka Mudda Dashboard"
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("ckeditor5/", include('django_ckeditor_5.urls')),
