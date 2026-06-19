@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.template.defaultfilters import truncatewords
 
 from .models import NewsArticle
 
@@ -6,16 +7,15 @@ from .models import NewsArticle
 @admin.register(NewsArticle)
 class NewsArticleAdmin(admin.ModelAdmin):
     list_display = (
-        "title",
+        "short_title",
         "category",
         "status",
         "author",
-        "is_breaking",
-        "is_featured",
-        "is_slider",
-        "is_recommended",
         "views",
         "created_at",
+    )
+    list_display_links = (
+        "short_title",
     )
     list_filter = (
         "status",
@@ -43,3 +43,12 @@ class NewsArticleAdmin(admin.ModelAdmin):
         "views",
         "updated_at",
     )
+    list_per_page = 25
+    list_select_related = (
+        "category",
+        "author",
+    )
+
+    @admin.display(description="Title", ordering="title")
+    def short_title(self, obj):
+        return truncatewords(obj.title, 10)

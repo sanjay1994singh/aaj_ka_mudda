@@ -1,0 +1,40 @@
+{% extends "admin/change_list.html" %}
+
+{% block extrahead %}
+{{ block.super }}
+<style>
+  #changelist-form .results {
+    overflow-x: auto;
+  }
+
+  #result_list th,
+  #result_list td {
+    white-space: nowrap;
+  }
+
+  #result_list .field-short_title {
+    min-width: 260px;
+    max-width: 420px;
+    white-space: normal;
+  }
+
+  #changelist .actions {
+    align-items: center;
+    gap: 8px;
+  }
+
+  #changelist-search {
+    max-width: 100%;
+  }
+
+  @media (max-width: 1024px) {
+    #changelist-filter {
+      max-width: 280px;
+    }
+
+    #result_list .field-short_title {
+      min-width: 220px;
+    }
+  }
+</style>
+{% endblock %}
