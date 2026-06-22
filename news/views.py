@@ -1,10 +1,13 @@
 from io import BytesIO
+from urllib.parse import quote_plus, urlencode
 
 from PIL import Image, ImageDraw, ImageFont, ImageOps
 from django.conf import settings
 from django.http import HttpResponse
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse
+from django.utils.html import strip_tags
+from django.utils.text import Truncator
 from django.views.decorators.cache import cache_control
 
 from news.models import NewsArticle
@@ -15,8 +18,21 @@ def public_absolute_url(path):
     return f"{settings.SITE_URL}{path}"
 
 
+def request_absolute_url(request, path):
+    return request.build_absolute_uri(path)
+
+
 def share_description(news):
-    return (news.short_description or news.title or '').strip()[:180]
+    source = news.short_description or strip_tags(news.content) or news.title or ''
+    return Truncator(source.strip()).chars(155)
+
+
+def article_image_url(request, news):
+    if news.image:
+        return request_absolute_url(request, news.image.url)
+    if news.image_url:
+        return news.image_url
+    return ''
 
 
 def safe_text_width(draw, text, font):
@@ -99,11 +115,15 @@ def news_detail(request, slug):
         status='published'
     ).exclude(id=news.id)[:6]
 
-    article_path = reverse('news_detail', kwargs={'slug': news.slug})
-    share_image_path = reverse('news_share_image', kwargs={'slug': news.slug})
-    share_url = public_absolute_url(article_path)
-    share_image_url = public_absolute_url(share_image_path)
+    canonical_path = reverse('news_detail', kwargs={'slug': news.slug})
+    share_path = reverse('news_share_redirect', kwargs={'pk': news.pk})
+    fallback_image_path = reverse('news_share_image', kwargs={'slug': news.slug})
+    canonical_url = request_absolute_url(request, canonical_path)
+    share_url = request_absolute_url(request, share_path)
+    fallback_image_url = request_absolute_url(request, fallback_image_path)
+    thumbnail_url = article_image_url(request, news) or fallback_image_url
     description = share_description(news)
+    share_text = f'{news.title} - {share_url}'
 
     return render(
         request,
@@ -112,12 +132,31 @@ def news_detail(request, slug):
             'news': news,
             'related_news': related_news,
             'latest_news': latest_news,
+            'canonical_url': canonical_url,
+            'thumbnail_url': thumbnail_url,
             'share_url': share_url,
-            'share_text': f'{news.title} {share_url}',
-            'share_image_url': share_image_url,
+            'whatsapp_share_url': f'https://wa.me/?text={quote_plus(share_text)}',
+            'facebook_share_url': (
+                'https://www.facebook.com/sharer/sharer.php?'
+                + urlencode({'u': share_url})
+            ),
+            'x_share_url': (
+                'https://twitter.com/intent/tweet?'
+                + urlencode({'url': share_url, 'text': news.title})
+            ),
+            'copy_share_url': share_url,
             'meta_description': description,
         }
     )
+
+
+def news_share_redirect(request, pk):
+    news = get_object_or_404(
+        NewsArticle,
+        pk=pk,
+        status='published'
+    )
+    return redirect('news_detail', slug=news.slug, permanent=True)
 
 
 @cache_control(public=True, max_age=86400)
