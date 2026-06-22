@@ -27,6 +27,8 @@ admin.site.index_title = "Aaj Ka Mudda Dashboard"
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('auth/', include('social_django.urls', namespace='social')),
+    path('accounts/', include('accounts.urls')),
     path("ckeditor5/", include('django_ckeditor_5.urls')),
 
     path('',include('news.urls')),

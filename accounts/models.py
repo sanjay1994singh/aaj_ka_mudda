@@ -37,6 +37,7 @@ class User(AbstractUser):
     twitter_url = models.URLField(blank=True, null=True)
     instagram_url = models.URLField(blank=True, null=True)
     youtube_url = models.URLField(blank=True, null=True)
+    google_avatar_url = models.URLField(blank=True, null=True)
 
     is_verified = models.BooleanField(default=False)
 

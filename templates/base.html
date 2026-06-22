@@ -355,6 +355,18 @@
         </a>
 
         <div>
+            {% if request.user.is_authenticated %}
+            <span class="fw-bold me-2">
+                {{ request.user.get_full_name|default:request.user.username }}
+            </span>
+            <a class="header-btn me-2" href="{% url 'logout' %}">
+                Logout
+            </a>
+            {% else %}
+            <a class="header-btn me-2" href="{% url 'login' %}">
+                Login
+            </a>
+            {% endif %}
             <button class="header-btn">ई-पेपर पढ़ें</button>
         </div>
 

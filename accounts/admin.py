@@ -43,6 +43,7 @@ class CustomUserAdmin(UserAdmin):
                     "twitter_url",
                     "instagram_url",
                     "youtube_url",
+                    "google_avatar_url",
                     "is_verified",
                 )
             },
