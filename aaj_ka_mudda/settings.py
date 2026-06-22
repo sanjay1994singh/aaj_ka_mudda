@@ -25,6 +25,9 @@ SECRET_KEY = 'django-insecure-5=w5w)#+$0k_#x@g%wp)_54fsfz+v*v&u_9gc#nkopppfmq3$$
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
+SITE_URL = os.environ.get('SITE_URL', 'https://aajkamudda.in').rstrip('/')
+USE_X_FORWARDED_HOST = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Application definition
 
