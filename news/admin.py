@@ -32,9 +32,6 @@ class NewsArticleAdmin(admin.ModelAdmin):
         "short_description",
         "content",
     )
-    prepopulated_fields = {
-        "slug": ("title",),
-    }
     autocomplete_fields = (
         "category",
         "author",

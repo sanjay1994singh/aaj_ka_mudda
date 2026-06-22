@@ -1,7 +1,39 @@
+import re
+
 from django.db import models
 from category.models import Category
 from django_ckeditor_5.fields import CKEditor5Field
 from django.conf import settings
+from django.utils import timezone
+
+
+def hindi_slug(text):
+    text = str(text).strip().lower()
+    text = re.sub(r"[^\u0900-\u097Fa-zA-Z0-9\s-]", "", text)
+    text = re.sub(r"[\s]+", "-", text)
+    text = re.sub(r"-+", "-", text)
+    return text.strip("-")
+
+
+def unique_news_slug(instance):
+    base_slug = hindi_slug(instance.title)
+
+    if not base_slug:
+        base_slug = f"news-{NewsArticle.objects.count() + 1}"
+
+    today = timezone.localdate().isoformat()
+    max_base_length = instance._meta.get_field("slug").max_length - len(today) - 1
+    base_slug = base_slug[:max_base_length].strip("-")
+    slug = f"{today}-{base_slug}"
+    counter = 1
+
+    while NewsArticle.objects.filter(slug=slug).exclude(pk=instance.pk).exists():
+        suffix = f"-{counter}"
+        base_length = max_base_length - len(suffix)
+        slug = f"{today}-{base_slug[:base_length].strip('-')}{suffix}"
+        counter += 1
+
+    return slug
 
 class NewsArticle(models.Model):
     STATUS_CHOICES = (
@@ -23,6 +55,7 @@ class NewsArticle(models.Model):
     slug = models.SlugField(
         max_length=700,
         unique=True,
+        blank=True,
         allow_unicode=True
     )
 
@@ -102,6 +135,12 @@ class NewsArticle(models.Model):
 
     class Meta:
         ordering = ["-created_at"]
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = unique_news_slug(self)
+
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.title
