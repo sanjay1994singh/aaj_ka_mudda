@@ -1,4 +1,5 @@
 {% load static %}
+{% now "d F Y" as current_date %}
 <!DOCTYPE html>
 <html lang="hi">
 <head>
@@ -501,7 +502,7 @@
 <div class="top-strip">
     <div class="container d-flex justify-content-between flex-wrap">
         <div>भारत की आवाज • सच के साथ</div>
-        <div>Updated: 13 June 2026 | Hindi News Portal</div>
+        <div>Updated: {{ current_date }} | Hindi News Portal</div>
     </div>
 </div>
 
