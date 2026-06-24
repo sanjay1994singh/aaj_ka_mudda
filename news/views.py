@@ -148,7 +148,7 @@ def news_detail(request, slug):
     canonical_url = request_absolute_url(request, canonical_path)
     share_url = request_absolute_url(request, share_path)
     fallback_image_url = request_absolute_url(request, fallback_image_path)
-    thumbnail_url = article_image_url(request, news) or fallback_image_url
+    thumbnail_url = fallback_image_url
     description = share_description(news)
     share_text = f'{news.title} - {share_url}'
 
@@ -251,5 +251,5 @@ def news_share_image(request, slug):
         y += 52
 
     output = BytesIO()
-    image.convert('RGB').save(output, format='JPEG', quality=88, optimize=True)
+    image.convert('RGB').save(output, format='JPEG', quality=82, optimize=True, progressive=True)
     return HttpResponse(output.getvalue(), content_type='image/jpeg')
