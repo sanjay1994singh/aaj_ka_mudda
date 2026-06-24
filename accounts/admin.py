@@ -23,12 +23,20 @@ class CustomUserAdmin(UserAdmin):
         "is_active",
         "is_superuser",
     )
+    list_editable = (
+        "role",
+        "is_verified",
+    )
     search_fields = (
         "username",
         "email",
         "first_name",
         "last_name",
         "phone",
+    )
+    actions = (
+        "approve_reporters",
+        "remove_reporter_approval",
     )
     fieldsets = UserAdmin.fieldsets + (
         (
@@ -49,3 +57,13 @@ class CustomUserAdmin(UserAdmin):
             },
         ),
     )
+
+    @admin.action(description="Approve selected reporters")
+    def approve_reporters(self, request, queryset):
+        updated = queryset.filter(role="reporter").update(is_verified=True)
+        self.message_user(request, f"{updated} reporter user(s) approved.")
+
+    @admin.action(description="Remove reporter approval")
+    def remove_reporter_approval(self, request, queryset):
+        updated = queryset.update(is_verified=False)
+        self.message_user(request, f"{updated} user approval(s) removed.")

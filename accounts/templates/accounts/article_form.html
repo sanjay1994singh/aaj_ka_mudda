@@ -1,0 +1,268 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ title }} | Aaj Ka Mudda{% endblock %}
+
+{% block css %}
+<link href="{% static 'django_ckeditor_5/dist/styles.css' %}" rel="stylesheet">
+<style>
+    .article-form-wrap{
+        max-width:980px;
+        margin:35px auto;
+        background:#fff;
+        border:1px solid var(--border);
+        border-radius:18px;
+        padding:26px;
+    }
+
+    .article-grid{
+        display:grid;
+        grid-template-columns:repeat(2,1fr);
+        gap:18px;
+    }
+
+    .form-row-full{
+        grid-column:1 / -1;
+    }
+
+    .article-form-wrap label{
+        font-weight:900;
+        margin-bottom:6px;
+    }
+
+    .article-form-wrap input:not([type="checkbox"]):not([type="radio"]),
+    .article-form-wrap select,
+    .article-form-wrap textarea,
+    .article-form-wrap .ck-editor,
+    .article-form-wrap .ck-editor__editable,
+    .article-form-wrap .django-ckeditor-widget,
+    .article-form-wrap .ck-editor-container{
+        width:100% !important;
+        max-width:100%;
+    }
+
+    .article-form-wrap textarea[name="content"],
+    .article-form-wrap .article-content-input{
+        min-height:430px;
+        resize:vertical;
+        line-height:1.8;
+        font-size:17px;
+        overflow-wrap:anywhere;
+    }
+
+    .article-form-wrap .django-ckeditor-widget > div{
+        width:100% !important;
+    }
+
+    .article-form-wrap .ck-editor__editable{
+        min-height:430px;
+        overflow-wrap:anywhere;
+    }
+
+    .article-form-wrap .ck-editor-container textarea.django_ckeditor_5,
+    .article-form-wrap textarea.reporter-ckeditor{
+        min-height:430px;
+    }
+
+    .article-form-wrap .ck-content img,
+    .article-form-wrap .ck-content figure,
+    .article-form-wrap .ck-content table,
+    .article-form-wrap .ck-content iframe{
+        max-width:100% !important;
+    }
+
+    .article-form-wrap .ck-content img{
+        height:auto !important;
+    }
+
+    .check-row{
+        display:flex;
+        align-items:center;
+        gap:8px;
+        background:#f8fafc;
+        border:1px solid var(--border);
+        border-radius:12px;
+        padding:12px;
+        min-height:48px;
+    }
+
+    .check-row input{
+        width:18px !important;
+        height:18px;
+        flex:0 0 18px;
+        margin:0;
+    }
+
+    .check-row label{
+        line-height:1.25;
+        margin:0;
+    }
+
+    .save-btn,
+    .back-btn{
+        border:0;
+        border-radius:12px;
+        padding:11px 18px;
+        font-weight:900;
+        display:inline-block;
+    }
+
+    .save-btn{
+        background:var(--red);
+        color:#fff;
+    }
+
+    .back-btn{
+        background:#eef2f7;
+        color:var(--navy);
+    }
+
+    @media(max-width:768px){
+        .article-grid{
+            grid-template-columns:1fr;
+        }
+
+        .article-form-wrap{
+            padding:18px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="article-form-wrap">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+        <h1 class="fw-bold mb-0">{{ title }}</h1>
+        <a class="back-btn" href="{% url 'dashboard' %}">Dashboard</a>
+    </div>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="article-grid">
+            {% for field in form %}
+                {% if field.field.widget.input_type == 'checkbox' %}
+                    <div class="check-row">
+                        {{ field }}
+                        <label class="mb-0" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    </div>
+                {% else %}
+                    <div class="{% if field.name == 'content' or field.name == 'short_description' %}form-row-full{% endif %}">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}
+                            <div class="text-danger small mt-1">{{ field.errors|striptags }}</div>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+        <button class="save-btn mt-4" type="submit">Save Article</button>
+    </form>
+</div>
+<script src="{% static 'django_ckeditor_5/dist/bundle.js' %}"></script>
+<script>
+    (function () {
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                document.cookie.split(';').some(function (cookie) {
+                    cookie = cookie.trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        return true;
+                    }
+                    return false;
+                });
+            }
+            return cookieValue;
+        }
+
+        function initReporterEditor() {
+            if (!window.ClassicEditor) {
+                return;
+            }
+
+            document.querySelectorAll('.article-form-wrap textarea.reporter-ckeditor').forEach(function (textarea) {
+                window.editors = window.editors || {};
+                if (window.editors[textarea.id] || textarea.dataset.editorReady === '1') {
+                    return;
+                }
+
+                var csrfInput = document.querySelector('input[name=csrfmiddlewaretoken]');
+                var config = {
+                    toolbar: [
+                        'heading', '|',
+                        'bold', 'italic', 'underline', 'link',
+                        'bulletedList', 'numberedList',
+                        'blockQuote', 'insertTable',
+                        'imageUpload', 'mediaEmbed',
+                        '|', 'undo', 'redo'
+                    ],
+                    simpleUpload: {
+                        uploadUrl: '/ckeditor5/image_upload/',
+                        headers: {
+                            'X-CSRFToken': getCookie('csrftoken') || (csrfInput ? csrfInput.value : ''),
+                        },
+                    },
+                    fileUploader: {
+                        fileTypes: ['jpeg', 'jpg', 'png', 'gif', 'bmp', 'webp', 'tiff'],
+                    },
+                    licenseKey: 'GPL',
+                    image: {
+                        toolbar: [
+                            'imageTextAlternative',
+                            'toggleImageCaption',
+                            'imageStyle:inline',
+                            'imageStyle:block',
+                            'imageStyle:side'
+                        ]
+                    },
+                    table: {
+                        contentToolbar: [
+                            'tableColumn',
+                            'tableRow',
+                            'mergeTableCells'
+                        ]
+                    }
+                };
+
+                textarea.dataset.editorReady = '1';
+                window.ClassicEditor.create(textarea, config).then(function (editor) {
+                    editor.model.document.on('change:data', function () {
+                        textarea.value = editor.getData();
+                    });
+                    window.editors[textarea.id] = editor;
+                }).catch(function (error) {
+                    textarea.dataset.editorReady = '';
+                    console.error(error);
+                });
+            });
+        }
+
+        function waitForEditorBundle(tries) {
+            if (window.ClassicEditor) {
+                initReporterEditor();
+                return;
+            }
+            if (tries <= 0) {
+                return;
+            }
+            setTimeout(function () {
+                waitForEditorBundle(tries - 1);
+            }, 100);
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', function () {
+                waitForEditorBundle(30);
+            });
+        } else {
+            waitForEditorBundle(30);
+        }
+
+        window.addEventListener('load', function () {
+            waitForEditorBundle(30);
+        });
+    })();
+</script>
+{% endblock %}

@@ -115,6 +115,7 @@ CKEDITOR_5_CONFIGS = {
         ],
     }
 }
+CKEDITOR_5_FILE_UPLOAD_PERMISSION = "authenticated"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -198,7 +199,7 @@ STATICFILES_DIRS = [
     BASE_DIR / 'static'
 ]
 
-MEDIA_URL = '/media/'
+MEDIA_URL = 'https://www.aajkamudda.in/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 AUTH_USER_MODEL = 'accounts.User'
 

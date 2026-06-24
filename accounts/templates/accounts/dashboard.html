@@ -1,0 +1,268 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard | Aaj Ka Mudda{% endblock %}
+
+{% block css %}
+<style>
+    .account-shell{
+        margin:35px 0;
+    }
+
+    .account-head{
+        background:#fff;
+        border:1px solid var(--border);
+        border-radius:18px;
+        padding:24px;
+        display:flex;
+        justify-content:space-between;
+        gap:18px;
+        flex-wrap:wrap;
+        align-items:center;
+    }
+
+    .account-actions{
+        display:flex;
+        gap:10px;
+        flex-wrap:wrap;
+    }
+
+    .account-btn{
+        border:0;
+        border-radius:12px;
+        background:var(--navy);
+        color:#fff;
+        padding:10px 16px;
+        font-weight:900;
+        display:inline-block;
+    }
+
+    .account-btn.red{
+        background:var(--red);
+    }
+
+    .account-btn.light{
+        background:#eef2f7;
+        color:var(--navy);
+    }
+
+    .approval-note{
+        margin-top:16px;
+        background:#fff7ed;
+        color:#9a3412;
+        border:1px solid #fed7aa;
+        border-radius:14px;
+        padding:14px 16px;
+        font-weight:800;
+    }
+
+    .stats-grid{
+        display:grid;
+        grid-template-columns:repeat(4,1fr);
+        gap:16px;
+        margin:22px 0;
+    }
+
+    .stat-card,
+    .account-panel{
+        background:#fff;
+        border:1px solid var(--border);
+        border-radius:16px;
+        padding:18px;
+    }
+
+    .stat-card span{
+        color:var(--muted);
+        font-size:13px;
+        font-weight:900;
+        text-transform:uppercase;
+    }
+
+    .stat-card strong{
+        display:block;
+        font-size:34px;
+        line-height:1.1;
+        color:var(--navy);
+        margin-top:8px;
+    }
+
+    .account-table{
+        width:100%;
+        border-collapse:collapse;
+    }
+
+    .account-table th,
+    .account-table td{
+        padding:12px;
+        border-bottom:1px solid var(--border);
+        vertical-align:top;
+    }
+
+    .account-table th{
+        color:var(--muted);
+        font-size:13px;
+        text-transform:uppercase;
+    }
+
+    .status-pill{
+        border-radius:999px;
+        padding:4px 10px;
+        background:#eef2ff;
+        color:#3730a3;
+        font-size:13px;
+        font-weight:900;
+        display:inline-block;
+    }
+
+    @media(max-width:991px){
+        .stats-grid{
+            grid-template-columns:repeat(2,1fr);
+        }
+    }
+
+    @media(max-width:576px){
+        .stats-grid{
+            grid-template-columns:1fr;
+        }
+
+        .account-table{
+            display:block;
+            overflow-x:auto;
+            white-space:nowrap;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="account-shell">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags|default:'info' }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="account-head">
+        <div>
+            <h1 class="fw-bold mb-1">My Dashboard</h1>
+            <div class="text-muted">
+                {{ request.user.get_full_name|default:request.user.username }} |
+                {{ request.user.get_role_display }}
+                {% if request.user.role == 'reporter' %}
+                    | {% if request.user.is_verified %}Approved{% else %}Approval pending{% endif %}
+                {% endif %}
+            </div>
+        </div>
+        <div class="account-actions">
+            <a class="account-btn light" href="{% url 'profile' %}">Profile</a>
+            {% if can_manage_articles %}
+                <a class="account-btn red" href="{% url 'article_create' %}">Add Article</a>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if request.user.role == 'reporter' and not request.user.is_verified %}
+        <div class="approval-note">
+            Your reporter account is waiting for admin approval. After approval you can add, update, and delete articles.
+        </div>
+    {% endif %}
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <span>Total Articles</span>
+            <strong>{{ total_articles }}</strong>
+        </div>
+        <div class="stat-card">
+            <span>Published</span>
+            <strong>{{ published_articles }}</strong>
+        </div>
+        <div class="stat-card">
+            <span>Draft</span>
+            <strong>{{ draft_articles }}</strong>
+        </div>
+        <div class="stat-card">
+            <span>Total Views</span>
+            <strong>{{ total_views }}</strong>
+        </div>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <span>Breaking</span>
+            <strong>{{ breaking_articles }}</strong>
+        </div>
+        <div class="stat-card">
+            <span>Featured</span>
+            <strong>{{ featured_articles }}</strong>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="account-panel">
+                <h3 class="fw-bold mb-3">Latest Articles</h3>
+                <table class="account-table">
+                    <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Status</th>
+                        <th>Views</th>
+                        <th>Date</th>
+                        {% if can_manage_articles %}
+                            <th>Action</th>
+                        {% endif %}
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for article in latest_articles %}
+                        <tr>
+                            <td>{{ article.title|truncatewords:12 }}</td>
+                            <td><span class="status-pill">{{ article.get_status_display }}</span></td>
+                            <td>{{ article.views }}</td>
+                            <td>{{ article.created_at|date:"d M Y" }}</td>
+                            {% if can_manage_articles %}
+                                <td>
+                                    <a href="{% url 'article_update' article.pk %}">Edit</a>
+                                    |
+                                    <a href="{% url 'article_delete' article.pk %}">Delete</a>
+                                </td>
+                            {% endif %}
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="5">No article data yet.</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="account-panel">
+                <h3 class="fw-bold mb-3">Category Analysis</h3>
+                <table class="account-table">
+                    <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th>Articles</th>
+                        <th>Views</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for item in category_stats %}
+                        <tr>
+                            <td>{{ item.category__name|default:"No category" }}</td>
+                            <td>{{ item.total }}</td>
+                            <td>{{ item.views|default:0 }}</td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="3">No category data yet.</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

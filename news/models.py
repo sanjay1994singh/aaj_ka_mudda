@@ -52,11 +52,10 @@ class NewsArticle(models.Model):
         max_length=500
     )
 
-    slug = models.SlugField(
-        max_length=700,
+    slug = models.CharField(
+        max_length=255,
         unique=True,
         blank=True,
-        allow_unicode=True
     )
 
     keywords = models.CharField(

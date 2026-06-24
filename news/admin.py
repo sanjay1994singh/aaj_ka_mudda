@@ -37,6 +37,7 @@ class NewsArticleAdmin(admin.ModelAdmin):
         "author",
     )
     readonly_fields = (
+        "slug",
         "views",
         "updated_at",
     )

@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block title %}Profile | Aaj Ka Mudda{% endblock %}
+
+{% block css %}
+<style>
+    .profile-wrap{
+        max-width:900px;
+        margin:35px auto;
+        background:#fff;
+        border:1px solid var(--border);
+        border-radius:18px;
+        padding:26px;
+    }
+
+    .profile-grid{
+        display:grid;
+        grid-template-columns:repeat(2,1fr);
+        gap:18px;
+    }
+
+    .form-row-full{
+        grid-column:1 / -1;
+    }
+
+    .profile-wrap label{
+        font-weight:900;
+        margin-bottom:6px;
+    }
+
+    .save-btn{
+        border:0;
+        border-radius:12px;
+        background:var(--red);
+        color:#fff;
+        padding:11px 18px;
+        font-weight:900;
+    }
+
+    .muted-box{
+        background:#f8fafc;
+        border:1px solid var(--border);
+        border-radius:14px;
+        padding:14px 16px;
+        margin-bottom:18px;
+        color:var(--muted);
+    }
+
+    @media(max-width:768px){
+        .profile-grid{
+            grid-template-columns:1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="profile-wrap">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags|default:'info' }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+        <h1 class="fw-bold mb-0">My Profile</h1>
+        <a href="{% url 'dashboard' %}">Back to Dashboard</a>
+    </div>
+
+    <div class="muted-box">
+        Select Reporter as your user type if you want to write articles. Admin approval is required before article tools unlock.
+    </div>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="profile-grid">
+            {% for field in form %}
+                <div class="{% if field.name == 'bio' %}form-row-full{% endif %}">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <div class="text-danger small mt-1">{{ field.errors|striptags }}</div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+        <button class="save-btn mt-4" type="submit">Save Profile</button>
+    </form>
+</div>
+{% endblock %}
