@@ -52,6 +52,22 @@
         font-weight:900;
     }
 
+    .column-more{
+        display:inline-block;
+        margin-top:18px;
+        background:var(--red);
+        color:#fff;
+        border-radius:30px;
+        padding:10px 20px;
+        font-size:14px;
+        font-weight:900;
+    }
+
+    .column-more:hover{
+        color:#fff;
+        background:var(--navy);
+    }
+
     @media(max-width:991px){
 
         .column-header{
@@ -534,6 +550,110 @@
 
     <div class="section-title">
         <span></span>
+        <h2>Latest Articles</h2>
+    </div>
+
+    <div class="row g-0">
+
+        <div class="col-lg-4 border-end pe-lg-4">
+            <div class="column-header">
+                National →
+            </div>
+
+            {% for news in national_bundle.news %}
+            <a href="{% url 'news_detail' news.slug %}">
+                <div class="column-news">
+                    {% if news.image %}
+                    <img src="{{ news.image.url }}" alt="{{ news.title }}">
+                    {% else %}
+                    <img src="https://picsum.photos/300/200?random={{ forloop.counter|add:120 }}" alt="">
+                    {% endif %}
+                    <div>
+                        <h4>{{ news.title|truncatechars:80 }}</h4>
+                        <span class="news-cat">{{ news.category.name|default:"National" }}</span>
+                    </div>
+                </div>
+            </a>
+            {% empty %}
+            <div class="ad-box">National category mein abhi koi article nahi hai.</div>
+            {% endfor %}
+
+            {% if national_bundle.category %}
+            <a class="column-more" href="{% url 'category_news' national_bundle.category.slug %}">
+                More National
+            </a>
+            {% endif %}
+        </div>
+
+        <div class="col-lg-4 border-end pe-lg-4 ps-lg-4">
+            <div class="column-header">
+                Article →
+            </div>
+
+            {% for news in article_bundle.news %}
+            <a href="{% url 'news_detail' news.slug %}">
+                <div class="column-news">
+                    {% if news.image %}
+                    <img src="{{ news.image.url }}" alt="{{ news.title }}">
+                    {% else %}
+                    <img src="https://picsum.photos/300/200?random={{ forloop.counter|add:140 }}" alt="">
+                    {% endif %}
+                    <div>
+                        <h4>{{ news.title|truncatechars:80 }}</h4>
+                        <span class="news-cat">{{ news.category.name|default:"Article" }}</span>
+                    </div>
+                </div>
+            </a>
+            {% empty %}
+            <div class="ad-box">Article category mein abhi koi article nahi hai.</div>
+            {% endfor %}
+
+            {% if article_bundle.category %}
+            <a class="column-more" href="{% url 'category_news' article_bundle.category.slug %}">
+                More Article
+            </a>
+            {% endif %}
+        </div>
+
+        <div class="col-lg-4 ps-lg-4">
+            <div class="column-header">
+                Lifestyle →
+            </div>
+
+            {% for news in lifestyle_bundle.news %}
+            <a href="{% url 'news_detail' news.slug %}">
+                <div class="column-news">
+                    {% if news.image %}
+                    <img src="{{ news.image.url }}" alt="{{ news.title }}">
+                    {% else %}
+                    <img src="https://picsum.photos/300/200?random={{ forloop.counter|add:160 }}" alt="">
+                    {% endif %}
+                    <div>
+                        <h4>{{ news.title|truncatechars:80 }}</h4>
+                        <span class="news-cat">{{ news.category.name|default:"Lifestyle" }}</span>
+                    </div>
+                </div>
+            </a>
+            {% empty %}
+            <div class="ad-box">Lifestyle category mein abhi koi article nahi hai.</div>
+            {% endfor %}
+
+            {% if lifestyle_bundle.category %}
+            <a class="column-more" href="{% url 'category_news' lifestyle_bundle.category.slug %}">
+                More Lifestyle
+            </a>
+            {% endif %}
+        </div>
+
+    </div>
+
+</section>
+
+{% comment %}
+<section class="three-column-news">
+
+    <div class="section-title">
+        <span></span>
         <h2>देश • राजनीति • दुनिया</h2>
     </div>
 
@@ -693,6 +813,7 @@
 
 </section>
 
+{% endcomment %}
 
 <div class="ad-box">
     Advertisement Space 728x90

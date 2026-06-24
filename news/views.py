@@ -10,6 +10,8 @@ from django.utils.html import strip_tags
 from django.utils.text import Truncator
 from django.views.decorators.cache import cache_control
 
+from django.db.models import Q
+
 from news.models import NewsArticle
 from category.models import Category
 
@@ -49,6 +51,24 @@ def safe_draw_text(draw, position, text, font, fill):
         draw.text(position, 'Read full story on Aaj Ka Mudda', font=font, fill=fill)
 
 
+def category_latest_bundle(names, limit=4):
+    category = Category.objects.filter(
+        Q(name__in=names) | Q(slug__in=[name.lower().replace(' ', '-') for name in names])
+    ).first()
+
+    news_items = NewsArticle.objects.none()
+    if category:
+        news_items = NewsArticle.objects.filter(
+            category=category,
+            status='published',
+        ).select_related('category').order_by('-created_at')[:limit]
+
+    return {
+        'category': category,
+        'news': news_items,
+    }
+
+
 def home(request):
     breaking_news = NewsArticle.objects.filter(
         is_breaking=True,
@@ -80,6 +100,10 @@ def home(request):
         'category'
     ).order_by('-created_at')[:4]
 
+    national_bundle = category_latest_bundle(['National', 'राष्ट्रीय', 'Rashtriya'])
+    article_bundle = category_latest_bundle(['Article', 'Artical', 'आर्टिकल'])
+    lifestyle_bundle = category_latest_bundle(['Lifestyle', 'लाइफस्टाइल'])
+
     featured_news = latest_news.first()
 
     side_news = latest_news[1:5]
@@ -93,6 +117,9 @@ def home(request):
         'delhi_ncr': delhi_ncr,
         'up_news': up_news,
         'politics_news': politics_news,
+        'national_bundle': national_bundle,
+        'article_bundle': article_bundle,
+        'lifestyle_bundle': lifestyle_bundle,
         'categories': categories,
     }
 
