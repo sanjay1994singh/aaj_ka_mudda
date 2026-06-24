@@ -5,7 +5,7 @@ def save_google_profile_data(backend, user, response, *args, **kwargs):
     changed_fields = []
 
     picture = response.get('picture')
-    if picture and user.google_avatar_url != picture:
+    if picture and not user.google_avatar_url:
         user.google_avatar_url = picture
         changed_fields.append('google_avatar_url')
 

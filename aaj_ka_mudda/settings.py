@@ -199,7 +199,7 @@ STATICFILES_DIRS = [
     BASE_DIR / 'static'
 ]
 
-MEDIA_URL = 'https://www.aajkamudda.in/media/'
+MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 AUTH_USER_MODEL = 'accounts.User'
 
@@ -235,5 +235,4 @@ SOCIAL_AUTH_PIPELINE = (
     'accounts.pipeline.save_google_profile_data',
     'social_core.pipeline.social_auth.associate_user',
     'social_core.pipeline.social_auth.load_extra_data',
-    'social_core.pipeline.user.user_details',
 )
