@@ -10,6 +10,45 @@ body:has(.epaper-shell) main.container > .breaking-bar{
     display:none;
 }
 
+body:has(.epaper-shell) .top-strip{
+    font-size:12px;
+    padding:5px 0;
+}
+
+body:has(.epaper-shell) .brand-header{
+    padding:12px 0;
+}
+
+body:has(.epaper-shell) .brand-icon{
+    width:48px;
+    height:48px;
+    border-radius:14px;
+    font-size:22px;
+}
+
+body:has(.epaper-shell) .brand-name{
+    font-size:30px;
+}
+
+body:has(.epaper-shell) .tagline{
+    font-size:12px;
+    margin-top:2px;
+}
+
+body:has(.epaper-shell) .header-btn{
+    min-height:40px;
+    padding:8px 18px;
+}
+
+body:has(.epaper-shell) .user-menu-toggle{
+    min-height:42px;
+}
+
+body:has(.epaper-shell) .user-avatar{
+    width:32px;
+    height:32px;
+}
+
 body:has(.epaper-shell) .main-menu a{
     padding:9px 12px;
     font-size:15px;
@@ -20,7 +59,7 @@ body:has(.epaper-shell) .main-menu a{
     align-items:center;
     justify-content:space-between;
     gap:18px;
-    padding-bottom:18px;
+    padding-bottom:12px;
     border-bottom:1px solid var(--border);
 }
 
@@ -36,14 +75,14 @@ body:has(.epaper-shell) .main-menu a{
 .epaper-kicker{
     color:var(--red);
     font-weight:900;
-    margin:0 0 4px;
+    margin:0 0 2px;
     text-transform:uppercase;
     letter-spacing:0;
 }
 
 .epaper-toolbar h1{
     color:var(--navy);
-    font-size:34px;
+    font-size:28px;
     font-weight:900;
     line-height:1.2;
     margin:0;
@@ -51,8 +90,8 @@ body:has(.epaper-shell) .main-menu a{
 
 .epaper-date{
     color:var(--muted);
-    margin:7px 0 0;
-    font-size:15px;
+    margin:4px 0 0;
+    font-size:14px;
 }
 
 .epaper-actions{
@@ -103,7 +142,7 @@ body:has(.epaper-shell) .main-menu a{
     display:flex;
     gap:10px;
     overflow-x:auto;
-    padding:16px 0;
+    padding:12px 0 4px;
 }
 
 .edition-pill{
@@ -111,7 +150,7 @@ body:has(.epaper-shell) .main-menu a{
     min-width:150px;
     border:1px solid var(--border);
     border-radius:12px;
-    padding:10px 12px;
+    padding:8px 12px;
     background:#f8fafc;
     color:var(--navy);
 }
