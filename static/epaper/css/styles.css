@@ -242,9 +242,9 @@
 
 .page-frame{
     position:relative;
-    height:calc(100vh - 230px);
-    min-height:720px;
-    overflow:auto;
+    height:auto;
+    min-height:0;
+    overflow:visible;
     display:flex;
     align-items:flex-start;
     justify-content:center;
@@ -328,7 +328,7 @@
 
 @media(max-height:850px) and (min-width:769px){
     .page-frame{
-        min-height:560px;
+        min-height:0;
     }
 }
 
