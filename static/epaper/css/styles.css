@@ -60,14 +60,14 @@
     font-weight:900;
 }
 
-.epaper-action.is-red{
-    background:var(--red);
-    color:#fff;
-    border-color:var(--red);
-}
-
 .share-action{
     cursor:pointer;
+}
+
+.share-action svg{
+    width:25px;
+    height:25px;
+    fill:currentColor;
 }
 
 .whatsapp-action{
@@ -454,17 +454,19 @@
     .page-frame{
         height:calc(100vh - 112px);
         padding:0;
-        background:#e5e7eb;
+        background:#f8fafc;
         overflow:auto;
-        align-items:flex-start;
+        align-items:center;
         justify-content:center;
     }
 
     .page-frame img{
         display:block;
-        width:100%;
-        max-width:none;
-        min-height:100%;
+        width:auto;
+        height:auto;
+        max-width:100%;
+        max-height:100%;
+        object-fit:contain;
         box-shadow:none;
         background:#fff;
     }

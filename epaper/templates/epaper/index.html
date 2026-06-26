@@ -50,17 +50,15 @@
         <button class="reader-tool" type="button" aria-label="Edition date">{{ edition.publish_date|date:"d" }}</button>
         <button class="reader-tool" type="button" data-reader-fit aria-label="Fit page">□</button>
 
-        {% if edition and edition.pdf %}
-        <a class="reader-tool" href="{{ edition.pdf.url }}" target="_blank" rel="noopener" aria-label="Download PDF">⇩</a>
-        {% endif %}
-
         <button class="reader-tool share-action"
                 type="button"
                 aria-label="Share"
                 data-share-url="{{ whatsapp_share_url }}"
                 data-share-title="{{ seo_title }}"
                 data-share-text="{{ seo_description }}">
-            ⤴
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M18 8a3 3 0 1 0-2.83-4H15a3 3 0 0 0 .18 1.03L8.9 8.67a3 3 0 1 0 0 4.66l6.28 3.64A3 3 0 1 0 16.1 15l-6.28-3.64a3.2 3.2 0 0 0 0-.72L16.1 7A3 3 0 0 0 18 8Z"/>
+            </svg>
         </button>
 
         <div class="epaper-title-block">
@@ -83,9 +81,6 @@
                rel="noopener">
                 WhatsApp
             </a>
-            {% if edition and edition.pdf %}
-            <a class="epaper-action is-red" href="{{ edition.pdf.url }}" target="_blank" rel="noopener">PDF</a>
-            {% endif %}
         </div>
     </div>
 
