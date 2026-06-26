@@ -5,18 +5,35 @@
     }
 
     var pages = JSON.parse(dataNode.textContent || "[]");
+    var editionsNode = document.getElementById("epaper-editions-data");
+    var editions = editionsNode ? JSON.parse(editionsNode.textContent || "[]") : [];
     var currentIndex = 0;
     var zoom = 100;
     var image = document.querySelector("[data-reader-image]");
+    var pageFrame = document.querySelector(".page-frame");
+    var readerStage = document.querySelector(".reader-stage");
     var title = document.querySelector("[data-reader-title]");
     var section = document.querySelector("[data-reader-section]");
     var currentPageLabels = Array.prototype.slice.call(document.querySelectorAll("[data-reader-current]"));
     var thumbs = Array.prototype.slice.call(document.querySelectorAll(".page-thumb"));
     var zoomRange = document.querySelector("[data-reader-zoom]");
+    var cropBox = document.querySelector("[data-crop-box]");
+    var cropActions = document.querySelector("[data-crop-actions]");
+    var cropCancel = document.querySelector("[data-crop-cancel]");
+    var cropSave = document.querySelector("[data-crop-save]");
+    var cropButtons = Array.prototype.slice.call(document.querySelectorAll("[data-crop-toggle]"));
+    var calendarButton = document.querySelector("[data-calendar-toggle]");
+    var calendarInput = document.querySelector("[data-edition-calendar]");
+    var cropMode = false;
+    var cropStart = null;
+    var cropSelection = null;
 
     function renderPage(index) {
         if (!pages[index] || !image) {
             return;
+        }
+        if (cropMode) {
+            setCropMode(false);
         }
         currentIndex = index;
         image.src = pages[index].image;
@@ -41,8 +58,126 @@
             zoomRange.value = zoom;
         }
         if (image) {
-            image.style.width = zoom + "%";
+            image.style.width = zoom === 100 ? "" : zoom + "%";
         }
+    }
+
+    function openCalendar() {
+        if (!calendarInput) {
+            return;
+        }
+        if (typeof calendarInput.showPicker === "function") {
+            calendarInput.showPicker();
+        } else {
+            calendarInput.focus();
+            calendarInput.click();
+        }
+    }
+
+    function goToEditionDate(dateValue) {
+        if (!dateValue) {
+            return;
+        }
+        var matched = editions.find(function (edition) {
+            return edition.date === dateValue;
+        });
+        if (matched && matched.url) {
+            window.location.href = matched.url;
+            return;
+        }
+        alert("E-paper is not available for this date.");
+    }
+
+    function resetCrop() {
+        cropStart = null;
+        cropSelection = null;
+        if (cropBox) {
+            cropBox.classList.remove("is-visible");
+            cropBox.removeAttribute("style");
+        }
+        if (cropActions) {
+            cropActions.classList.remove("is-open");
+        }
+    }
+
+    function setCropMode(enabled) {
+        cropMode = enabled;
+        resetCrop();
+        if (readerStage) {
+            readerStage.classList.toggle("is-cropping", cropMode);
+        }
+        cropButtons.forEach(function (button) {
+            button.classList.toggle("is-active", cropMode);
+        });
+    }
+
+    function clamp(value, min, max) {
+        return Math.max(min, Math.min(max, value));
+    }
+
+    function getPointInFrame(event) {
+        var frameRect = pageFrame.getBoundingClientRect();
+        var imageRect = image.getBoundingClientRect();
+        var clientX = event.clientX;
+        var clientY = event.clientY;
+        var x = clamp(clientX, imageRect.left, imageRect.right);
+        var y = clamp(clientY, imageRect.top, imageRect.bottom);
+        return {
+            frameX: x - frameRect.left + pageFrame.scrollLeft,
+            frameY: y - frameRect.top + pageFrame.scrollTop,
+            imageX: x - imageRect.left,
+            imageY: y - imageRect.top,
+            imageRect: imageRect
+        };
+    }
+
+    function drawCropBox(startPoint, endPoint) {
+        if (!cropBox) {
+            return;
+        }
+        var left = Math.min(startPoint.frameX, endPoint.frameX);
+        var top = Math.min(startPoint.frameY, endPoint.frameY);
+        var width = Math.abs(endPoint.frameX - startPoint.frameX);
+        var height = Math.abs(endPoint.frameY - startPoint.frameY);
+        cropBox.style.left = left + "px";
+        cropBox.style.top = top + "px";
+        cropBox.style.width = width + "px";
+        cropBox.style.height = height + "px";
+        cropBox.classList.add("is-visible");
+    }
+
+    function saveCrop() {
+        if (!cropSelection || !image || cropSelection.width < 12 || cropSelection.height < 12) {
+            alert("Please select a news clip first.");
+            return;
+        }
+
+        var canvas = document.createElement("canvas");
+        var scaleX = image.naturalWidth / cropSelection.imageRect.width;
+        var scaleY = image.naturalHeight / cropSelection.imageRect.height;
+        var sx = Math.round(cropSelection.left * scaleX);
+        var sy = Math.round(cropSelection.top * scaleY);
+        var sw = Math.round(cropSelection.width * scaleX);
+        var sh = Math.round(cropSelection.height * scaleY);
+        canvas.width = sw;
+        canvas.height = sh;
+        canvas.getContext("2d").drawImage(image, sx, sy, sw, sh, 0, 0, sw, sh);
+
+        canvas.toBlob(function (blob) {
+            if (!blob) {
+                return;
+            }
+            var fileName = "aaj-ka-mudda-clip-page-" + (currentIndex + 1) + ".jpg";
+            var url = URL.createObjectURL(blob);
+            var link = document.createElement("a");
+            link.href = url;
+            link.download = fileName;
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            URL.revokeObjectURL(url);
+            setCropMode(false);
+        }, "image/jpeg", 0.92);
     }
 
     thumbs.forEach(function (thumb) {
@@ -92,6 +227,66 @@
         });
     });
 
+    cropButtons.forEach(function (button) {
+        button.addEventListener("click", function () {
+            setCropMode(!cropMode);
+        });
+    });
+
+    if (cropCancel) {
+        cropCancel.addEventListener("click", function () {
+            setCropMode(false);
+        });
+    }
+
+    if (cropSave) {
+        cropSave.addEventListener("click", saveCrop);
+    }
+
+    if (pageFrame && image) {
+        pageFrame.addEventListener("pointerdown", function (event) {
+            if (!cropMode || !image.complete) {
+                return;
+            }
+            event.preventDefault();
+            pageFrame.setPointerCapture(event.pointerId);
+            cropStart = getPointInFrame(event);
+            cropSelection = null;
+            drawCropBox(cropStart, cropStart);
+        });
+
+        pageFrame.addEventListener("pointermove", function (event) {
+            if (!cropMode || !cropStart) {
+                return;
+            }
+            event.preventDefault();
+            drawCropBox(cropStart, getPointInFrame(event));
+        });
+
+        pageFrame.addEventListener("pointerup", function (event) {
+            if (!cropMode || !cropStart) {
+                return;
+            }
+            event.preventDefault();
+            var endPoint = getPointInFrame(event);
+            var left = Math.min(cropStart.imageX, endPoint.imageX);
+            var top = Math.min(cropStart.imageY, endPoint.imageY);
+            var width = Math.abs(endPoint.imageX - cropStart.imageX);
+            var height = Math.abs(endPoint.imageY - cropStart.imageY);
+            cropSelection = {
+                left: left,
+                top: top,
+                width: width,
+                height: height,
+                imageRect: endPoint.imageRect
+            };
+            cropStart = null;
+            if (cropActions) {
+                cropActions.classList.toggle("is-open", width >= 12 && height >= 12);
+            }
+        });
+    }
+
     if (allPagesButton && pageRail) {
         allPagesButton.addEventListener("click", function () {
             pageRail.classList.toggle("is-open");
@@ -109,6 +304,16 @@
             if (editionSelect.value) {
                 window.location.href = editionSelect.value;
             }
+        });
+    }
+
+    if (calendarButton) {
+        calendarButton.addEventListener("click", openCalendar);
+    }
+
+    if (calendarInput) {
+        calendarInput.addEventListener("change", function () {
+            goToEditionDate(calendarInput.value);
         });
     }
 

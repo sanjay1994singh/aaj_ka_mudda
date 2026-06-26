@@ -47,8 +47,15 @@
             <span class="chip-caret">▾</span>
         </div>
 
-        <button class="reader-tool" type="button" aria-label="Edition date">{{ edition.publish_date|date:"d" }}</button>
+        <button class="reader-tool" type="button" data-calendar-toggle aria-label="Edition date">{{ edition.publish_date|date:"d" }}</button>
+        <input class="reader-calendar" type="date" value="{{ current_date_iso }}" data-edition-calendar aria-label="Select e-paper date">
         <button class="reader-tool" type="button" data-reader-fit aria-label="Fit page">□</button>
+
+        <button class="reader-tool" type="button" data-crop-toggle aria-label="Crop news clip">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M9.64 7.64 4.7 2.7 3.29 4.11l4.95 4.95a3.5 3.5 0 1 0 1.4-1.42ZM7 13.5A1.5 1.5 0 1 1 7 10a1.5 1.5 0 0 1 0 3.5Zm10-4a3.46 3.46 0 0 0-1.24.23l-2.08-2.08 2.91-2.91L15.17 3.3 9.9 8.58l4.46 4.46A3.5 3.5 0 1 0 17 9.5Zm0 5.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Zm-4.65-1.94-2.77 2.77 1.41 1.42 2.78-2.78-1.42-1.41Z"/>
+            </svg>
+        </button>
 
         <button class="reader-tool share-action"
                 type="button"
@@ -98,6 +105,7 @@
 
     {% if pages %}
     {{ pages|json_script:"epaper-pages-data" }}
+    {{ editions_meta|json_script:"epaper-editions-data" }}
 
     <div class="reader-layout" data-current-date="{{ current_date_iso }}">
         <aside class="page-rail">
@@ -123,6 +131,7 @@
 
             <div class="page-frame">
                 <img data-reader-image src="{{ pages.0.image }}" alt="{{ pages.0.title }}">
+                <div class="crop-box" data-crop-box></div>
             </div>
 
             <div class="stage-bottombar">
@@ -130,8 +139,14 @@
                 <input class="zoom-range" type="range" min="70" max="160" value="100" data-reader-zoom>
                 <button class="zoom-btn" type="button" data-reader-zoom-in>+</button>
                 <button class="zoom-btn" type="button" data-reader-fit>Fit</button>
+                <button class="zoom-btn" type="button" data-crop-toggle>Crop</button>
             </div>
         </article>
+
+        <div class="crop-actions" data-crop-actions>
+            <button type="button" data-crop-cancel>Cancel</button>
+            <button type="button" data-crop-save>Save Clip</button>
+        </div>
 
         <div class="mobile-pagebar">
             <button class="all-pages-btn" type="button" data-all-pages>
