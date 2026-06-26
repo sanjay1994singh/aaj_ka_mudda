@@ -63,7 +63,9 @@
     }
 
     function openCalendar() {
-        var calendarInput = calendarInputs[0];
+        var calendarInput = calendarInputs.find(function (input) {
+            return input.offsetParent !== null;
+        }) || calendarInputs[0];
         if (!calendarInput) {
             return;
         }
@@ -79,9 +81,22 @@
         if (!dateValue) {
             return;
         }
+        var activeSelect = editionSelects.find(function (select) {
+            return select.offsetParent !== null;
+        }) || editionSelects[0];
+        var activeEdition = activeSelect ? editions.find(function (edition) {
+            return edition.url === activeSelect.value;
+        }) : null;
+
         var matched = editions.find(function (edition) {
+            return edition.date === dateValue &&
+                activeEdition &&
+                edition.city === activeEdition.city &&
+                edition.section === activeEdition.section;
+        }) || editions.find(function (edition) {
             return edition.date === dateValue;
         });
+
         if (matched && matched.url) {
             window.location.href = matched.url;
             return;

@@ -111,18 +111,6 @@
         </div>
     </div>
 
-    {% if edition_list %}
-    <div class="edition-strip" aria-label="E-paper editions">
-        {% for item in edition_list %}
-        <a class="edition-pill {% if edition and item.pk == edition.pk %}is-active{% endif %}"
-           href="{% url 'epaper:edition' item.pk %}">
-            <span>{{ item.publish_date|date:"d M Y" }}</span>
-            <small>{{ item.city }} - {{ item.section }}</small>
-        </a>
-        {% endfor %}
-    </div>
-    {% endif %}
-
     {% if pages %}
     {{ pages|json_script:"epaper-pages-data" }}
     {{ editions_meta|json_script:"epaper-editions-data" }}
