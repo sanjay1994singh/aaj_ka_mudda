@@ -47,8 +47,10 @@
             <span class="chip-caret">▾</span>
         </div>
 
-        <button class="reader-tool" type="button" data-calendar-toggle aria-label="Edition date">{{ edition.publish_date|date:"d" }}</button>
-        <input class="reader-calendar" type="date" value="{{ current_date_iso }}" data-edition-calendar aria-label="Select e-paper date">
+        <label class="reader-tool reader-date-picker" aria-label="Edition date">
+            <span>{{ edition.publish_date|date:"d" }}</span>
+            <input class="reader-calendar" type="date" value="{{ current_date_iso }}" data-edition-calendar aria-label="Select e-paper date">
+        </label>
         <button class="reader-tool is-hidden-mobile" type="button" data-reader-fit aria-label="Fit page">□</button>
 
         <button class="reader-tool" type="button" data-crop-toggle aria-label="Crop news clip">

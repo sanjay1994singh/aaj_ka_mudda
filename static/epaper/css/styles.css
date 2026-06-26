@@ -565,18 +565,7 @@ body:has(.epaper-shell) .main-menu a{
         padding:0;
     }
 
-    .reader-calendar{
-        display:block;
-        position:absolute;
-        top:8px;
-        right:58px;
-        width:1px;
-        height:1px;
-        opacity:0;
-        pointer-events:none;
-    }
-
-    .reader-tool[aria-label="Edition date"]{
+    .reader-date-picker{
         width:32px;
         height:34px;
         border:2px solid #e5e7eb;
@@ -584,9 +573,10 @@ body:has(.epaper-shell) .main-menu a{
         font-size:17px;
         line-height:1;
         position:relative;
+        overflow:hidden;
     }
 
-    .reader-tool[aria-label="Edition date"]::before{
+    .reader-date-picker::before{
         content:"";
         position:absolute;
         top:4px;
@@ -594,6 +584,22 @@ body:has(.epaper-shell) .main-menu a{
         right:5px;
         height:3px;
         background:#e5e7eb;
+    }
+
+    .reader-date-picker span{
+        position:relative;
+        z-index:1;
+    }
+
+    .reader-date-picker .reader-calendar{
+        display:block;
+        position:absolute;
+        inset:0;
+        width:100%;
+        height:100%;
+        opacity:0;
+        pointer-events:auto;
+        z-index:2;
     }
 
     .epaper-toolbar h1{
