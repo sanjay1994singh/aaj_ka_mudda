@@ -194,6 +194,7 @@ def news_share_image(request, slug):
 
     canvas_size = (1200, 630)
     image = None
+    has_article_image = False
 
     local_image_path = news.local_image_path()
     if local_image_path and local_image_path.exists():
@@ -201,6 +202,7 @@ def news_share_image(request, slug):
             with local_image_path.open('rb') as image_file:
                 image = Image.open(image_file).convert('RGB')
                 image = ImageOps.fit(image, canvas_size, method=Image.Resampling.LANCZOS)
+                has_article_image = True
         except Exception:
             image = None
 
@@ -213,41 +215,42 @@ def news_share_image(request, slug):
             blue = 58 + int(y * 0.02)
             draw.line([(0, y), (canvas_size[0], y)], fill=(red, green, blue))
 
-    overlay = Image.new('RGBA', canvas_size, (0, 0, 0, 0))
-    overlay_draw = ImageDraw.Draw(overlay)
-    overlay_draw.rectangle((0, 400, 1200, 630), fill=(0, 0, 0, 160))
-    image = Image.alpha_composite(image.convert('RGBA'), overlay)
+    if not has_article_image:
+        overlay = Image.new('RGBA', canvas_size, (0, 0, 0, 0))
+        overlay_draw = ImageDraw.Draw(overlay)
+        overlay_draw.rectangle((0, 400, 1200, 630), fill=(0, 0, 0, 160))
+        image = Image.alpha_composite(image.convert('RGBA'), overlay)
 
-    draw = ImageDraw.Draw(image)
-    try:
-        title_font = ImageFont.truetype('arial.ttf', 48)
-        brand_font = ImageFont.truetype('arial.ttf', 32)
-    except OSError:
-        title_font = ImageFont.load_default()
-        brand_font = ImageFont.load_default()
+        draw = ImageDraw.Draw(image)
+        try:
+            title_font = ImageFont.truetype('arial.ttf', 48)
+            brand_font = ImageFont.truetype('arial.ttf', 32)
+        except OSError:
+            title_font = ImageFont.load_default()
+            brand_font = ImageFont.load_default()
 
-    draw.text((48, 420), 'Aaj Ka Mudda', font=brand_font, fill='#ffffff')
-    title = news.title[:110]
-    lines = []
-    words = title.split()
-    current_line = ''
-    for word in words:
-        test_line = f'{current_line} {word}'.strip()
-        if safe_text_width(draw, test_line, title_font) <= 1080:
-            current_line = test_line
-        else:
-            if current_line:
-                lines.append(current_line)
-            current_line = word
-        if len(lines) == 2:
-            break
-    if current_line and len(lines) < 3:
-        lines.append(current_line)
+        draw.text((48, 420), 'Aaj Ka Mudda', font=brand_font, fill='#ffffff')
+        title = news.title[:110]
+        lines = []
+        words = title.split()
+        current_line = ''
+        for word in words:
+            test_line = f'{current_line} {word}'.strip()
+            if safe_text_width(draw, test_line, title_font) <= 1080:
+                current_line = test_line
+            else:
+                if current_line:
+                    lines.append(current_line)
+                current_line = word
+            if len(lines) == 2:
+                break
+        if current_line and len(lines) < 3:
+            lines.append(current_line)
 
-    y = 465
-    for line in lines[:3]:
-        safe_draw_text(draw, (48, y), line, title_font, '#ffffff')
-        y += 52
+        y = 465
+        for line in lines[:3]:
+            safe_draw_text(draw, (48, y), line, title_font, '#ffffff')
+            y += 52
 
     output = BytesIO()
     image.convert('RGB').save(output, format='JPEG', quality=82, optimize=True, progressive=True)
