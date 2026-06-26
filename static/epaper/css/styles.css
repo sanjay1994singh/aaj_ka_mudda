@@ -489,6 +489,10 @@ body:has(.epaper-shell) .main-menu a{
         flex:0 0 auto;
     }
 
+    .is-hidden-mobile{
+        display:none !important;
+    }
+
     .reader-back{
         width:34px;
         height:40px;
