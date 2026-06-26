@@ -52,6 +52,7 @@
     var zoomIn = document.querySelector("[data-reader-zoom-in]");
     var zoomOut = document.querySelector("[data-reader-zoom-out]");
     var zoomFit = document.querySelector("[data-reader-fit]");
+    var shareButton = document.querySelector("[data-share-url]");
 
     if (prev) {
         prev.addEventListener("click", function () {
@@ -81,6 +82,31 @@
     if (zoomFit) {
         zoomFit.addEventListener("click", function () {
             setZoom(100);
+        });
+    }
+
+    if (shareButton) {
+        shareButton.addEventListener("click", function () {
+            var shareData = {
+                title: shareButton.dataset.shareTitle || document.title,
+                text: shareButton.dataset.shareText || "",
+                url: shareButton.dataset.shareUrl || window.location.href
+            };
+
+            if (navigator.share) {
+                navigator.share(shareData).catch(function () {});
+                return;
+            }
+
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(shareData.url).then(function () {
+                    var oldText = shareButton.textContent;
+                    shareButton.textContent = "Copied";
+                    window.setTimeout(function () {
+                        shareButton.textContent = oldText;
+                    }, 1600);
+                });
+            }
         });
     }
 })();

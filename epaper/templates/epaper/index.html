@@ -34,9 +34,19 @@
         </div>
 
         <div class="epaper-actions">
-            {% if request.user.is_staff %}
-            <a class="epaper-action" href="{% url 'epaper:upload' %}">Upload</a>
-            {% endif %}
+            <button class="epaper-action share-action"
+                    type="button"
+                    data-share-url="{{ whatsapp_share_url }}"
+                    data-share-title="{{ seo_title }}"
+                    data-share-text="{{ seo_description }}">
+                Share
+            </button>
+            <a class="epaper-action whatsapp-action"
+               href="https://api.whatsapp.com/send?text={{ seo_title|urlencode }}%20{{ whatsapp_share_url|urlencode }}"
+               target="_blank"
+               rel="noopener">
+                WhatsApp
+            </a>
             {% if edition and edition.pdf %}
             <a class="epaper-action is-red" href="{{ edition.pdf.url }}" target="_blank" rel="noopener">PDF</a>
             {% endif %}
@@ -95,9 +105,7 @@
     {% else %}
     <div class="empty-epaper">
         <h2>No e-paper uploaded yet</h2>
-        {% if request.user.is_staff %}
-        <a class="header-btn" href="{% url 'epaper:upload' %}">Upload first PDF</a>
-        {% endif %}
+        <p>Please upload the first PDF from Django admin.</p>
     </div>
     {% endif %}
 </section>

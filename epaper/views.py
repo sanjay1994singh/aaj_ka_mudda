@@ -2,17 +2,13 @@ from io import BytesIO
 from urllib.parse import urljoin, urlparse
 
 from django.conf import settings
-from django.contrib import messages
-from django.contrib.admin.views.decorators import staff_member_required
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import get_object_or_404, render
 from django.templatetags.static import static
 from django.urls import reverse
 
-from .forms import EpaperEditionForm
 from .models import EpaperEdition
-from .services import convert_pdf_to_pages
 
 
 SHARE_IMAGE_WIDTH = 1200
@@ -130,21 +126,3 @@ def epaper_home(request, pk=None):
         },
     )
 
-
-@staff_member_required
-def upload_epaper(request):
-    if request.method == "POST":
-        form = EpaperEditionForm(request.POST, request.FILES)
-        if form.is_valid():
-            edition = form.save()
-            try:
-                page_count = convert_pdf_to_pages(edition)
-            except RuntimeError as exc:
-                messages.error(request, str(exc))
-                return redirect("epaper:upload")
-            messages.success(request, f"PDF uploaded and converted into {page_count} page(s).")
-            return redirect("epaper:edition", pk=edition.pk)
-    else:
-        form = EpaperEditionForm()
-
-    return render(request, "epaper/upload.html", {"form": form})

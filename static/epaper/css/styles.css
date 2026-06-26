@@ -59,6 +59,16 @@
     border-color:var(--red);
 }
 
+.share-action{
+    cursor:pointer;
+}
+
+.whatsapp-action{
+    background:#16a34a;
+    border-color:#16a34a;
+    color:#fff;
+}
+
 .edition-strip{
     display:flex;
     gap:10px;
