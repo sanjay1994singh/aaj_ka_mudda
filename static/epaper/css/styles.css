@@ -456,8 +456,10 @@ body:has(.epaper-shell) .main-menu a{
     }
 
     .epaper-toolbar{
-        position:sticky;
+        position:fixed;
         top:0;
+        left:0;
+        right:0;
         z-index:20;
         align-items:center;
         flex-direction:row;
@@ -634,6 +636,7 @@ body:has(.epaper-shell) .main-menu a{
         border:0;
         border-radius:0;
         background:#fff;
+        margin-top:58px;
         min-height:calc(100vh - 112px);
     }
 
