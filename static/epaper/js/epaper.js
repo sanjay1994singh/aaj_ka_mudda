@@ -27,6 +27,7 @@
     var cropMode = false;
     var cropStart = null;
     var cropSelection = null;
+    var swipeStart = null;
 
     function renderPage(index) {
         if (!pages[index] || !image) {
@@ -60,6 +61,14 @@
         if (image) {
             image.style.width = zoom === 100 ? "" : zoom + "%";
         }
+    }
+
+    function goToPreviousPage() {
+        renderPage((currentIndex - 1 + pages.length) % pages.length);
+    }
+
+    function goToNextPage() {
+        renderPage((currentIndex + 1) % pages.length);
     }
 
     function openCalendar() {
@@ -214,12 +223,12 @@
 
     prevButtons.forEach(function (button) {
         button.addEventListener("click", function () {
-            renderPage((currentIndex - 1 + pages.length) % pages.length);
+            goToPreviousPage();
         });
     });
     nextButtons.forEach(function (button) {
         button.addEventListener("click", function () {
-            renderPage((currentIndex + 1) % pages.length);
+            goToNextPage();
         });
     });
     if (zoomRange) {
@@ -261,6 +270,15 @@
 
     if (pageFrame && image) {
         pageFrame.addEventListener("pointerdown", function (event) {
+            if (!cropMode && event.pointerType === "touch") {
+                swipeStart = {
+                    x: event.clientX,
+                    y: event.clientY,
+                    time: Date.now()
+                };
+                return;
+            }
+
             if (!cropMode || !image.complete) {
                 return;
             }
@@ -280,6 +298,22 @@
         });
 
         pageFrame.addEventListener("pointerup", function (event) {
+            if (!cropMode && swipeStart && event.pointerType === "touch") {
+                var dx = event.clientX - swipeStart.x;
+                var dy = event.clientY - swipeStart.y;
+                var elapsed = Date.now() - swipeStart.time;
+                swipeStart = null;
+
+                if (Math.abs(dx) > 55 && Math.abs(dx) > Math.abs(dy) * 1.4 && elapsed < 700) {
+                    if (dx < 0) {
+                        goToNextPage();
+                    } else {
+                        goToPreviousPage();
+                    }
+                }
+                return;
+            }
+
             if (!cropMode || !cropStart) {
                 return;
             }
