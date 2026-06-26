@@ -33,6 +33,7 @@ urlpatterns = [
 
     path('',include('news.urls')),
     path('category/', include('category.urls')),
+    path('epaper/', include('epaper.urls')),
 ]
 
 

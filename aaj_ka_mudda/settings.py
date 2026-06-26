@@ -89,6 +89,7 @@ INSTALLED_APPS = [
 
     'accounts',
     'category',
+    'epaper',
     'news',
 ]
 

@@ -551,7 +551,7 @@
                 Login
             </a>
             {% endif %}
-            <a class="header-btn epaper-btn" href="{% url 'home' %}">
+            <a class="header-btn epaper-btn" href="{% url 'epaper:home' %}">
                 ई-पेपर पढ़ें
             </a>
         </div>
@@ -647,6 +647,8 @@
         });
     });
 </script>
+
+{% block js %}{% endblock %}
 
 </body>
 </html>

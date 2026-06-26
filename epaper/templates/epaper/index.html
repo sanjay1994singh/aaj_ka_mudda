@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ seo_title }}{% endblock %}
+{% block meta_description %}{{ seo_description }}{% endblock %}
+
+{% block extra_metatags %}
+<link rel="canonical" href="{{ canonical_url }}">
+<meta property="og:type" content="article">
+<meta property="og:title" content="{{ seo_title }}">
+<meta property="og:description" content="{{ seo_description }}">
+<meta property="og:url" content="{{ whatsapp_share_url }}">
+<meta property="og:image" content="{{ absolute_image_url }}">
+<meta property="og:image:secure_url" content="{{ absolute_image_url }}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ seo_title }}">
+<meta name="twitter:description" content="{{ seo_description }}">
+<meta name="twitter:image" content="{{ absolute_image_url }}">
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'epaper/css/styles.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="epaper-shell">
+    <div class="epaper-toolbar">
+        <div>
+            <p class="epaper-kicker">Aaj Ka Mudda E-Paper</p>
+            <h1>{{ current_city|default:"Aaj Ka Mudda" }} {{ current_section|default:"Main" }}</h1>
+            <p class="epaper-date">{{ edition_date }}</p>
+        </div>
+
+        <div class="epaper-actions">
+            {% if request.user.is_staff %}
+            <a class="epaper-action" href="{% url 'epaper:upload' %}">Upload</a>
+            {% endif %}
+            {% if edition and edition.pdf %}
+            <a class="epaper-action is-red" href="{{ edition.pdf.url }}" target="_blank" rel="noopener">PDF</a>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if edition_list %}
+    <div class="edition-strip" aria-label="E-paper editions">
+        {% for item in edition_list %}
+        <a class="edition-pill {% if edition and item.pk == edition.pk %}is-active{% endif %}"
+           href="{% url 'epaper:edition' item.pk %}">
+            <span>{{ item.publish_date|date:"d M Y" }}</span>
+            <small>{{ item.city }} - {{ item.section }}</small>
+        </a>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if pages %}
+    {{ pages|json_script:"epaper-pages-data" }}
+
+    <div class="reader-layout" data-current-date="{{ current_date_iso }}">
+        <aside class="page-rail">
+            {% for page in pages %}
+            <button class="page-thumb {% if forloop.first %}is-active{% endif %}"
+                    type="button"
+                    data-page-index="{{ forloop.counter0 }}">
+                <img src="{{ page.image }}" alt="{{ page.title }}">
+                <span>{{ page.title }}</span>
+            </button>
+            {% endfor %}
+        </aside>
+
+        <article class="reader-stage">
+            <div class="stage-topbar">
+                <button class="reader-icon" type="button" data-reader-prev aria-label="Previous page">‹</button>
+                <div>
+                    <strong data-reader-title>{{ pages.0.title }}</strong>
+                    <span data-reader-section>{{ pages.0.section }}</span>
+                </div>
+                <button class="reader-icon" type="button" data-reader-next aria-label="Next page">›</button>
+            </div>
+
+            <div class="page-frame">
+                <img data-reader-image src="{{ pages.0.image }}" alt="{{ pages.0.title }}">
+            </div>
+
+            <div class="stage-bottombar">
+                <button class="zoom-btn" type="button" data-reader-zoom-out>-</button>
+                <input class="zoom-range" type="range" min="70" max="160" value="100" data-reader-zoom>
+                <button class="zoom-btn" type="button" data-reader-zoom-in>+</button>
+                <button class="zoom-btn" type="button" data-reader-fit>Fit</button>
+            </div>
+        </article>
+    </div>
+    {% else %}
+    <div class="empty-epaper">
+        <h2>No e-paper uploaded yet</h2>
+        {% if request.user.is_staff %}
+        <a class="header-btn" href="{% url 'epaper:upload' %}">Upload first PDF</a>
+        {% endif %}
+    </div>
+    {% endif %}
+</section>
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'epaper/js/epaper.js' %}"></script>
+{% endblock %}
