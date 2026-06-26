@@ -6,6 +6,15 @@
     padding:22px;
 }
 
+body:has(.epaper-shell) main.container > .breaking-bar{
+    display:none;
+}
+
+body:has(.epaper-shell) .main-menu a{
+    padding:9px 12px;
+    font-size:15px;
+}
+
 .epaper-toolbar{
     display:flex;
     align-items:center;
