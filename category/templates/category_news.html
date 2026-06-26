@@ -28,8 +28,8 @@
         <a href="{% url 'news_detail' featured_news.slug %}">
             <div class="hero-card">
 
-                {% if featured_news.image %}
-                <img src="{{ featured_news.image.url }}" alt="{{ featured_news.title }}">
+                {% if featured_news.image_src %}
+                <img src="{{ featured_news.image_src }}" alt="{{ featured_news.title }}">
                 {% else %}
                 <img src="https://picsum.photos/900/520?random=11" alt="">
                 {% endif %}
@@ -66,8 +66,8 @@
         <a href="{% url 'news_detail' news.slug %}">
             <div class="side-news">
 
-                {% if news.image %}
-                <img src="{{ news.image.url }}" alt="{{ news.title }}">
+                {% if news.image_src %}
+                <img src="{{ news.image_src }}" alt="{{ news.title }}">
                 {% else %}
                 <img src="https://picsum.photos/300/200?random={{ forloop.counter }}" alt="">
                 {% endif %}
@@ -106,8 +106,8 @@
         <a href="{% url 'news_detail' news.slug %}">
             <div class="news-card">
 
-                {% if news.image %}
-                <img src="{{ news.image.url }}" alt="{{ news.title }}">
+                {% if news.image_src %}
+                <img src="{{ news.image_src }}" alt="{{ news.title }}">
                 {% else %}
                 <img src="https://picsum.photos/400/260?random={{ forloop.counter|add:20 }}" alt="">
                 {% endif %}

@@ -1,4 +1,5 @@
 import re
+from pathlib import Path
 
 from django.db import models
 from category.models import Category
@@ -140,6 +141,44 @@ class NewsArticle(models.Model):
             self.slug = unique_news_slug(self)
 
         super().save(*args, **kwargs)
+
+    @property
+    def image_src(self):
+        raw_path = ''
+        if self.image:
+            raw_path = self.image.name
+        elif self.image_url:
+            raw_path = self.image_url
+
+        if not raw_path:
+            return ''
+
+        raw_path = str(raw_path).strip()
+        if raw_path.startswith(('http://', 'https://')):
+            return raw_path
+
+        normalized_path = raw_path.lstrip('/')
+        if normalized_path.startswith(('uploads/', 'media/')):
+            return f'/{normalized_path}'
+
+        return f'{settings.MEDIA_URL.rstrip("/")}/{normalized_path}'
+
+    def local_image_path(self):
+        raw_path = ''
+        if self.image:
+            raw_path = self.image.name
+        elif self.image_url:
+            raw_path = self.image_url
+
+        if not raw_path or str(raw_path).startswith(('http://', 'https://')):
+            return None
+
+        normalized_path = str(raw_path).lstrip('/')
+        if normalized_path.startswith('uploads/'):
+            return Path(settings.BASE_DIR) / normalized_path
+        if normalized_path.startswith('media/'):
+            return Path(settings.BASE_DIR) / normalized_path
+        return Path(settings.MEDIA_ROOT) / normalized_path
 
     def __str__(self):
         return self.title

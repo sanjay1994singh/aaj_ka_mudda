@@ -30,10 +30,8 @@ def share_description(news):
 
 
 def article_image_url(request, news):
-    if news.image:
-        return request_absolute_url(request, news.image.url)
-    if news.image_url:
-        return news.image_url
+    if news.image_src:
+        return request_absolute_url(request, news.image_src)
     return ''
 
 
@@ -197,9 +195,10 @@ def news_share_image(request, slug):
     canvas_size = (1200, 630)
     image = None
 
-    if news.image:
+    local_image_path = news.local_image_path()
+    if local_image_path and local_image_path.exists():
         try:
-            with news.image.open('rb') as image_file:
+            with local_image_path.open('rb') as image_file:
                 image = Image.open(image_file).convert('RGB')
                 image = ImageOps.fit(image, canvas_size, method=Image.Resampling.LANCZOS)
         except Exception:
