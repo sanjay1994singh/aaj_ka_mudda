@@ -27,7 +27,43 @@
 {% block content %}
 <section class="epaper-shell">
     <div class="epaper-toolbar">
-        <div>
+        <a class="reader-back" href="{% url 'home' %}" aria-label="Back to home">&lsaquo;</a>
+
+        <label class="reader-select city-chip">
+            <span class="chip-icon">⌖</span>
+            <select data-edition-select aria-label="Select edition">
+                {% for item in edition_list %}
+                <option value="{% url 'epaper:edition' item.pk %}" {% if edition and item.pk == edition.pk %}selected{% endif %}>
+                    {{ item.city }}
+                </option>
+                {% empty %}
+                <option>{{ current_city|default:"Aaj Ka Mudda" }}</option>
+                {% endfor %}
+            </select>
+        </label>
+
+        <div class="reader-select section-chip">
+            <span>{{ current_section|default:"Main" }}</span>
+            <span class="chip-caret">▾</span>
+        </div>
+
+        <button class="reader-tool" type="button" aria-label="Edition date">{{ edition.publish_date|date:"d" }}</button>
+        <button class="reader-tool" type="button" data-reader-fit aria-label="Fit page">□</button>
+
+        {% if edition and edition.pdf %}
+        <a class="reader-tool" href="{{ edition.pdf.url }}" target="_blank" rel="noopener" aria-label="Download PDF">⇩</a>
+        {% endif %}
+
+        <button class="reader-tool share-action"
+                type="button"
+                aria-label="Share"
+                data-share-url="{{ whatsapp_share_url }}"
+                data-share-title="{{ seo_title }}"
+                data-share-text="{{ seo_description }}">
+            ⤴
+        </button>
+
+        <div class="epaper-title-block">
             <p class="epaper-kicker">Aaj Ka Mudda E-Paper</p>
             <h1>{{ current_city|default:"Aaj Ka Mudda" }} {{ current_section|default:"Main" }}</h1>
             <p class="epaper-date">{{ edition_date }}</p>
@@ -101,6 +137,18 @@
                 <button class="zoom-btn" type="button" data-reader-fit>Fit</button>
             </div>
         </article>
+
+        <div class="mobile-pagebar">
+            <button class="all-pages-btn" type="button" data-all-pages>
+                <span>▱</span>
+                सभी पेज देखें
+            </button>
+            <div class="mobile-pager">
+                <button type="button" data-reader-prev aria-label="Previous page">&lsaquo;</button>
+                <strong><span data-reader-current>1</span> - {{ pages|length }}</strong>
+                <button type="button" data-reader-next aria-label="Next page">&rsaquo;</button>
+            </div>
+        </div>
     </div>
     {% else %}
     <div class="empty-epaper">

@@ -10,6 +10,7 @@
     var image = document.querySelector("[data-reader-image]");
     var title = document.querySelector("[data-reader-title]");
     var section = document.querySelector("[data-reader-section]");
+    var currentPageLabels = Array.prototype.slice.call(document.querySelectorAll("[data-reader-current]"));
     var thumbs = Array.prototype.slice.call(document.querySelectorAll(".page-thumb"));
     var zoomRange = document.querySelector("[data-reader-zoom]");
 
@@ -29,6 +30,9 @@
         thumbs.forEach(function (thumb, thumbIndex) {
             thumb.classList.toggle("is-active", thumbIndex === currentIndex);
         });
+        currentPageLabels.forEach(function (label) {
+            label.textContent = String(currentIndex + 1);
+        });
     }
 
     function setZoom(value) {
@@ -47,23 +51,26 @@
         });
     });
 
-    var prev = document.querySelector("[data-reader-prev]");
-    var next = document.querySelector("[data-reader-next]");
+    var prevButtons = Array.prototype.slice.call(document.querySelectorAll("[data-reader-prev]"));
+    var nextButtons = Array.prototype.slice.call(document.querySelectorAll("[data-reader-next]"));
     var zoomIn = document.querySelector("[data-reader-zoom-in]");
     var zoomOut = document.querySelector("[data-reader-zoom-out]");
-    var zoomFit = document.querySelector("[data-reader-fit]");
-    var shareButton = document.querySelector("[data-share-url]");
+    var fitButtons = Array.prototype.slice.call(document.querySelectorAll("[data-reader-fit]"));
+    var shareButtons = Array.prototype.slice.call(document.querySelectorAll("[data-share-url]"));
+    var allPagesButton = document.querySelector("[data-all-pages]");
+    var pageRail = document.querySelector(".page-rail");
+    var editionSelect = document.querySelector("[data-edition-select]");
 
-    if (prev) {
-        prev.addEventListener("click", function () {
+    prevButtons.forEach(function (button) {
+        button.addEventListener("click", function () {
             renderPage((currentIndex - 1 + pages.length) % pages.length);
         });
-    }
-    if (next) {
-        next.addEventListener("click", function () {
+    });
+    nextButtons.forEach(function (button) {
+        button.addEventListener("click", function () {
             renderPage((currentIndex + 1) % pages.length);
         });
-    }
+    });
     if (zoomRange) {
         zoomRange.addEventListener("input", function () {
             setZoom(Number(zoomRange.value));
@@ -79,13 +86,33 @@
             setZoom(zoom - 10);
         });
     }
-    if (zoomFit) {
-        zoomFit.addEventListener("click", function () {
+    fitButtons.forEach(function (button) {
+        button.addEventListener("click", function () {
             setZoom(100);
+        });
+    });
+
+    if (allPagesButton && pageRail) {
+        allPagesButton.addEventListener("click", function () {
+            pageRail.classList.toggle("is-open");
+        });
+
+        thumbs.forEach(function (thumb) {
+            thumb.addEventListener("click", function () {
+                pageRail.classList.remove("is-open");
+            });
         });
     }
 
-    if (shareButton) {
+    if (editionSelect) {
+        editionSelect.addEventListener("change", function () {
+            if (editionSelect.value) {
+                window.location.href = editionSelect.value;
+            }
+        });
+    }
+
+    shareButtons.forEach(function (shareButton) {
         shareButton.addEventListener("click", function () {
             var shareData = {
                 title: shareButton.dataset.shareTitle || document.title,
@@ -108,5 +135,5 @@
                 });
             }
         });
-    }
+    });
 })();

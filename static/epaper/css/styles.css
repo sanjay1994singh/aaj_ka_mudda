@@ -15,6 +15,13 @@
     border-bottom:1px solid var(--border);
 }
 
+.reader-back,
+.reader-select,
+.reader-tool,
+.mobile-pagebar{
+    display:none;
+}
+
 .epaper-kicker{
     color:var(--red);
     font-weight:900;
@@ -250,15 +257,149 @@
 }
 
 @media(max-width:768px){
+    body:has(.epaper-shell) .top-strip,
+    body:has(.epaper-shell) .brand-header,
+    body:has(.epaper-shell) .main-menu,
+    body:has(.epaper-shell) main.container > .breaking-bar,
+    body:has(.epaper-shell) .footer{
+        display:none;
+    }
+
+    body:has(.epaper-shell){
+        background:#111827;
+    }
+
+    body:has(.epaper-shell) main.container{
+        max-width:none;
+        width:100%;
+        padding:0;
+        margin:0;
+    }
+
     .epaper-shell{
-        margin:18px -2px 32px;
-        border-radius:16px;
-        padding:14px;
+        min-height:100vh;
+        margin:0;
+        border:0;
+        border-radius:0;
+        padding:0;
+        background:#111827;
     }
 
     .epaper-toolbar{
-        align-items:flex-start;
-        flex-direction:column;
+        position:sticky;
+        top:0;
+        z-index:20;
+        align-items:center;
+        flex-direction:row;
+        justify-content:space-between;
+        gap:8px;
+        background:#111827;
+        border:0;
+        padding:10px 8px;
+        min-height:58px;
+        box-shadow:0 1px 0 rgba(255,255,255,.08);
+    }
+
+    .epaper-title-block,
+    .epaper-actions,
+    .stage-topbar,
+    .stage-bottombar,
+    .edition-strip{
+        display:none;
+    }
+
+    .reader-back,
+    .reader-select,
+    .reader-tool{
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
+        color:#fff;
+        flex:0 0 auto;
+    }
+
+    .reader-back{
+        width:34px;
+        height:40px;
+        font-size:42px;
+        font-weight:400;
+        line-height:1;
+    }
+
+    .reader-select{
+        min-height:40px;
+        border-radius:6px;
+        background:#eef2f7;
+        color:#475569;
+        padding:0 10px;
+        max-width:116px;
+        font-size:17px;
+        font-weight:700;
+        box-shadow:inset 0 0 0 1px rgba(15,23,42,.25);
+    }
+
+    .city-chip{
+        gap:4px;
+    }
+
+    .city-chip select{
+        width:78px;
+        border:0;
+        background:transparent;
+        color:#475569;
+        font:inherit;
+        font-weight:700;
+        outline:0;
+        appearance:none;
+    }
+
+    .chip-icon{
+        color:#dc2626;
+    }
+
+    .section-chip{
+        max-width:86px;
+        background:transparent;
+        color:#fff;
+        box-shadow:none;
+        gap:4px;
+        font-size:18px;
+    }
+
+    .chip-caret{
+        color:#86efac;
+        font-size:14px;
+    }
+
+    .reader-tool{
+        width:34px;
+        height:40px;
+        border:0;
+        background:transparent;
+        color:#fff;
+        font-size:28px;
+        font-weight:800;
+        padding:0;
+    }
+
+    .reader-tool[aria-label="Edition date"]{
+        width:32px;
+        height:34px;
+        border:2px solid #e5e7eb;
+        border-radius:4px;
+        font-size:17px;
+        line-height:1;
+        position:relative;
+    }
+
+    .reader-tool[aria-label="Edition date"]::before{
+        content:"";
+        position:absolute;
+        top:4px;
+        left:5px;
+        right:5px;
+        height:3px;
+        background:#e5e7eb;
     }
 
     .epaper-toolbar h1{
@@ -267,32 +408,127 @@
 
     .reader-layout{
         grid-template-columns:1fr;
+        gap:0;
     }
 
     .page-rail{
+        display:none;
+        position:fixed;
+        left:0;
+        right:0;
+        bottom:58px;
+        z-index:19;
         flex-direction:row;
         max-height:none;
         overflow-x:auto;
-        padding:0 0 4px;
+        gap:10px;
+        padding:10px;
+        background:rgba(17,24,39,.96);
+        box-shadow:0 -8px 24px rgba(0,0,0,.28);
+    }
+
+    .page-rail.is-open{
+        display:flex;
     }
 
     .page-thumb{
-        width:92px;
-        flex:0 0 92px;
+        width:74px;
+        flex:0 0 74px;
+        padding:4px;
+        background:#fff;
+        border-radius:8px;
     }
 
-    .stage-topbar{
-        position:sticky;
-        top:0;
-        z-index:2;
+    .page-thumb span{
+        font-size:11px;
+        text-align:center;
+    }
+
+    .reader-stage{
+        border:0;
+        border-radius:0;
+        background:#fff;
+        min-height:calc(100vh - 112px);
     }
 
     .page-frame{
-        height:70vh;
-        padding:10px;
+        height:calc(100vh - 112px);
+        padding:0;
+        background:#e5e7eb;
+        overflow:auto;
+        align-items:flex-start;
+        justify-content:center;
     }
 
     .page-frame img{
+        display:block;
+        width:100%;
         max-width:none;
+        min-height:100%;
+        box-shadow:none;
+        background:#fff;
+    }
+
+    .mobile-pagebar{
+        position:fixed;
+        left:0;
+        right:0;
+        bottom:0;
+        z-index:20;
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:10px;
+        min-height:54px;
+        padding:8px 10px;
+        background:#2b2728;
+        color:#fff;
+        box-shadow:0 -1px 0 rgba(255,255,255,.08);
+    }
+
+    .all-pages-btn,
+    .mobile-pager button{
+        border:0;
+        background:transparent;
+        color:#fff;
+        font-weight:800;
+    }
+
+    .all-pages-btn{
+        display:inline-flex;
+        align-items:center;
+        gap:8px;
+        font-size:16px;
+        padding:8px 0;
+    }
+
+    .all-pages-btn span{
+        width:24px;
+        height:24px;
+        border:2px solid #e5e7eb;
+        border-radius:4px;
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
+        font-size:14px;
+    }
+
+    .mobile-pager{
+        display:flex;
+        align-items:center;
+        gap:16px;
+        font-size:18px;
+    }
+
+    .mobile-pager button{
+        font-size:44px;
+        line-height:1;
+        padding:0 4px;
+    }
+
+    .mobile-pager strong{
+        min-width:58px;
+        text-align:center;
+        font-size:19px;
     }
 }
