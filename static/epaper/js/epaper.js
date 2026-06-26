@@ -71,6 +71,26 @@
         renderPage((currentIndex + 1) % pages.length);
     }
 
+    function handleSwipeEnd(endX, endY) {
+        if (!swipeStart || cropMode) {
+            swipeStart = null;
+            return;
+        }
+
+        var dx = endX - swipeStart.x;
+        var dy = endY - swipeStart.y;
+        var elapsed = Date.now() - swipeStart.time;
+        swipeStart = null;
+
+        if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy) * 1.2 && elapsed < 900) {
+            if (dx < 0) {
+                goToNextPage();
+            } else {
+                goToPreviousPage();
+            }
+        }
+    }
+
     function openCalendar() {
         var calendarInput = calendarInputs.find(function (input) {
             return input.offsetParent !== null;
@@ -269,6 +289,25 @@
     }
 
     if (pageFrame && image) {
+        pageFrame.addEventListener("touchstart", function (event) {
+            if (cropMode || !event.touches || event.touches.length !== 1) {
+                return;
+            }
+            swipeStart = {
+                x: event.touches[0].clientX,
+                y: event.touches[0].clientY,
+                time: Date.now()
+            };
+        }, { passive: true });
+
+        pageFrame.addEventListener("touchend", function (event) {
+            if (!event.changedTouches || event.changedTouches.length !== 1) {
+                swipeStart = null;
+                return;
+            }
+            handleSwipeEnd(event.changedTouches[0].clientX, event.changedTouches[0].clientY);
+        }, { passive: true });
+
         pageFrame.addEventListener("pointerdown", function (event) {
             if (!cropMode && event.pointerType === "touch") {
                 swipeStart = {
@@ -299,18 +338,7 @@
 
         pageFrame.addEventListener("pointerup", function (event) {
             if (!cropMode && swipeStart && event.pointerType === "touch") {
-                var dx = event.clientX - swipeStart.x;
-                var dy = event.clientY - swipeStart.y;
-                var elapsed = Date.now() - swipeStart.time;
-                swipeStart = null;
-
-                if (Math.abs(dx) > 55 && Math.abs(dx) > Math.abs(dy) * 1.4 && elapsed < 700) {
-                    if (dx < 0) {
-                        goToNextPage();
-                    } else {
-                        goToPreviousPage();
-                    }
-                }
+                handleSwipeEnd(event.clientX, event.clientY);
                 return;
             }
 
