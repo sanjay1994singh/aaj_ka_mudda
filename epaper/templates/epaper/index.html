@@ -74,6 +74,26 @@
             <p class="epaper-date">{{ edition_date }}</p>
         </div>
 
+        <div class="desktop-epaper-controls">
+            <label class="desktop-control">
+                <span>Edition</span>
+                <select data-edition-select aria-label="Select edition">
+                    {% for item in edition_list %}
+                    <option value="{% url 'epaper:edition' item.pk %}" {% if edition and item.pk == edition.pk %}selected{% endif %}>
+                        {{ item.city }} - {{ item.section }}
+                    </option>
+                    {% empty %}
+                    <option>{{ current_city|default:"Aaj Ka Mudda" }}</option>
+                    {% endfor %}
+                </select>
+            </label>
+            <label class="desktop-control">
+                <span>Calendar</span>
+                <input type="date" value="{{ current_date_iso }}" data-edition-calendar aria-label="Select e-paper date">
+            </label>
+            <button class="epaper-action" type="button" data-crop-toggle>Crop</button>
+        </div>
+
         <div class="epaper-actions">
             <button class="epaper-action share-action"
                     type="button"

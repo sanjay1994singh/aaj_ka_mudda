@@ -58,7 +58,8 @@ body:has(.epaper-shell) .main-menu a{
     display:flex;
     align-items:center;
     justify-content:space-between;
-    gap:18px;
+    gap:14px;
+    flex-wrap:nowrap;
     padding-bottom:12px;
     border-bottom:1px solid var(--border);
 }
@@ -82,23 +83,31 @@ body:has(.epaper-shell) .main-menu a{
 
 .epaper-toolbar h1{
     color:var(--navy);
-    font-size:28px;
+    font-size:24px;
     font-weight:900;
     line-height:1.2;
     margin:0;
+    white-space:nowrap;
 }
 
 .epaper-date{
     color:var(--muted);
     margin:4px 0 0;
     font-size:14px;
+    white-space:nowrap;
+}
+
+.epaper-title-block{
+    flex:0 1 auto;
+    min-width:260px;
 }
 
 .epaper-actions{
     display:flex;
     align-items:center;
     gap:10px;
-    flex-wrap:wrap;
+    flex-wrap:nowrap;
+    flex:0 0 auto;
 }
 
 .epaper-action{
@@ -108,6 +117,43 @@ body:has(.epaper-shell) .main-menu a{
     border-radius:999px;
     padding:10px 16px;
     font-weight:900;
+    white-space:nowrap;
+}
+
+.desktop-epaper-controls{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    flex:1 1 auto;
+    min-width:0;
+    justify-content:flex-end;
+}
+
+.desktop-control{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    min-width:0;
+    margin:0;
+    color:var(--muted);
+    font-size:13px;
+    font-weight:900;
+}
+
+.desktop-control select,
+.desktop-control input{
+    height:42px;
+    border:1px solid var(--border);
+    background:#f8fafc;
+    border-radius:999px;
+    padding:0 14px;
+    color:var(--navy);
+    font-weight:900;
+    max-width:220px;
+}
+
+.desktop-control input{
+    max-width:150px;
 }
 
 .share-action{
@@ -139,7 +185,7 @@ body:has(.epaper-shell) .main-menu a{
 }
 
 .edition-strip{
-    display:flex;
+    display:none;
     gap:10px;
     overflow-x:auto;
     padding:12px 0 4px;
@@ -425,6 +471,7 @@ body:has(.epaper-shell) .main-menu a{
     }
 
     .epaper-title-block,
+    .desktop-epaper-controls,
     .epaper-actions,
     .stage-topbar,
     .stage-bottombar,

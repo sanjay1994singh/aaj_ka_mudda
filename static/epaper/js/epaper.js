@@ -22,8 +22,8 @@
     var cropCancel = document.querySelector("[data-crop-cancel]");
     var cropSave = document.querySelector("[data-crop-save]");
     var cropButtons = Array.prototype.slice.call(document.querySelectorAll("[data-crop-toggle]"));
-    var calendarButton = document.querySelector("[data-calendar-toggle]");
-    var calendarInput = document.querySelector("[data-edition-calendar]");
+    var calendarButtons = Array.prototype.slice.call(document.querySelectorAll("[data-calendar-toggle]"));
+    var calendarInputs = Array.prototype.slice.call(document.querySelectorAll("[data-edition-calendar]"));
     var cropMode = false;
     var cropStart = null;
     var cropSelection = null;
@@ -63,6 +63,7 @@
     }
 
     function openCalendar() {
+        var calendarInput = calendarInputs[0];
         if (!calendarInput) {
             return;
         }
@@ -194,7 +195,7 @@
     var shareButtons = Array.prototype.slice.call(document.querySelectorAll("[data-share-url]"));
     var allPagesButton = document.querySelector("[data-all-pages]");
     var pageRail = document.querySelector(".page-rail");
-    var editionSelect = document.querySelector("[data-edition-select]");
+    var editionSelects = Array.prototype.slice.call(document.querySelectorAll("[data-edition-select]"));
 
     prevButtons.forEach(function (button) {
         button.addEventListener("click", function () {
@@ -299,23 +300,23 @@
         });
     }
 
-    if (editionSelect) {
+    editionSelects.forEach(function (editionSelect) {
         editionSelect.addEventListener("change", function () {
             if (editionSelect.value) {
                 window.location.href = editionSelect.value;
             }
         });
-    }
+    });
 
-    if (calendarButton) {
+    calendarButtons.forEach(function (calendarButton) {
         calendarButton.addEventListener("click", openCalendar);
-    }
+    });
 
-    if (calendarInput) {
+    calendarInputs.forEach(function (calendarInput) {
         calendarInput.addEventListener("change", function () {
             goToEditionDate(calendarInput.value);
         });
-    }
+    });
 
     shareButtons.forEach(function (shareButton) {
         shareButton.addEventListener("click", function () {
