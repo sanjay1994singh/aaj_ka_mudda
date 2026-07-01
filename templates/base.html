@@ -628,6 +628,21 @@
 </footer>
 
 <script>
+    function tuneBreakingTickerSpeed() {
+        var isMobile = window.matchMedia('(max-width: 768px)').matches;
+        document.querySelectorAll('.breaking-text marquee').forEach(function (marquee) {
+            marquee.setAttribute('scrollamount', isMobile ? '4' : '9');
+            if (isMobile) {
+                marquee.setAttribute('scrolldelay', '35');
+            } else {
+                marquee.removeAttribute('scrolldelay');
+            }
+        });
+    }
+
+    tuneBreakingTickerSpeed();
+    window.addEventListener('resize', tuneBreakingTickerSpeed);
+
     document.querySelectorAll('.user-menu-toggle').forEach(function (button) {
         button.addEventListener('click', function (event) {
             event.stopPropagation();
