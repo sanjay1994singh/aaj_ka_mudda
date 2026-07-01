@@ -16,12 +16,9 @@ class EpaperRegion(models.Model):
 class EpaperEdition(models.Model):
     region = models.ForeignKey(
         EpaperRegion,
-        blank=True,
-        null=True,
-        on_delete=models.SET_NULL,
+        on_delete=models.PROTECT,
         related_name="editions",
     )
-    city = models.CharField(max_length=120, default="Aaj Ka Mudda")
     section = models.CharField(max_length=80, default="Main")
     publish_date = models.DateField()
     pdf = models.FileField(upload_to="epaper/pdfs/")
@@ -29,7 +26,11 @@ class EpaperEdition(models.Model):
 
     class Meta:
         ordering = ["-publish_date", "-created_at"]
-        unique_together = ("city", "section", "publish_date")
+        unique_together = ("region", "section", "publish_date")
+
+    @property
+    def city(self):
+        return self.region.name if self.region else "Aaj Ka Mudda"
 
     def __str__(self):
         return f"{self.city} - {self.section} - {self.publish_date:%d %b %Y}"
