@@ -93,6 +93,12 @@
         margin:50px 0;
         padding-top:25px;
         border-top:2px solid #111;
+        display:flex;
+        flex-direction:column;
+    }
+
+    .short-video-section .section-title{
+        order:1;
     }
 
     .short-video-grid{
@@ -156,14 +162,31 @@
         text-shadow:0 2px 6px rgba(0,0,0,.4);
     }
 
+    .youtube-shorts-grid{
+        display:grid;
+        grid-template-columns:repeat(5,1fr);
+        gap:24px;
+        order:2;
+    }
+
+    .short-video-section > .short-video-grid{
+        order:3;
+        display:none;
+    }
+
     @media(max-width:1200px){
         .short-video-grid{
+            grid-template-columns:repeat(3,1fr);
+        }
+
+        .youtube-shorts-grid{
             grid-template-columns:repeat(3,1fr);
         }
     }
 
     @media(max-width:768px){
-        .short-video-grid{
+        .short-video-grid,
+        .youtube-shorts-grid{
             display:flex;
             overflow-x:auto;
             gap:16px;
@@ -177,6 +200,126 @@
 
         .short-video-title{
             font-size:18px;
+        }
+    }
+</style>
+
+<style>
+    .youtube-news-section{
+        display:flex;
+        flex-direction:column;
+    }
+
+    .youtube-news-section .section-title{
+        order:1;
+    }
+
+    .youtube-news-section .video-news-layout,
+    .youtube-news-section .youtube-empty{
+        order:2;
+    }
+
+    .youtube-news-section > .row.g-4{
+        display:none;
+    }
+
+    .video-news-layout{
+        display:grid;
+        grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+        gap:24px;
+    }
+
+    .video-news-main,
+    .video-news-item{
+        background:#fff;
+        color:var(--navy);
+        border-radius:18px;
+        overflow:hidden;
+        border:1px solid rgba(255,255,255,.25);
+    }
+
+    .video-news-main{
+        display:block;
+        min-height:100%;
+    }
+
+    .video-news-main img{
+        width:100%;
+        aspect-ratio:16 / 9;
+        object-fit:cover;
+        display:block;
+    }
+
+    .video-news-body{
+        padding:18px;
+    }
+
+    .video-news-body h3{
+        margin:12px 0;
+        font-size:24px;
+        line-height:1.35;
+        font-weight:900;
+    }
+
+    .video-play-chip{
+        display:inline-block;
+        background:var(--red);
+        color:#fff;
+        border-radius:999px;
+        padding:8px 14px;
+        font-size:13px;
+        font-weight:900;
+    }
+
+    .video-news-list{
+        display:flex;
+        flex-direction:column;
+        gap:16px;
+    }
+
+    .video-news-item{
+        display:flex;
+        align-items:center;
+        gap:16px;
+        padding:14px 16px;
+        min-height:126px;
+    }
+
+    .video-news-item img{
+        width:170px;
+        aspect-ratio:16 / 9;
+        object-fit:cover;
+        border-radius:12px;
+        flex:0 0 auto;
+    }
+
+    .video-news-item h4{
+        margin:8px 0 0;
+        font-size:19px;
+        line-height:1.35;
+        font-weight:900;
+    }
+
+    @media(max-width:768px){
+        .video-news-layout{
+            grid-template-columns:1fr;
+        }
+
+        .video-news-item{
+            align-items:flex-start;
+            padding:12px;
+        }
+
+        .video-news-item img{
+            width:120px;
+        }
+
+        .video-news-body h3{
+            font-size:20px;
+        }
+
+        .video-news-item h4{
+            font-size:16px;
         }
     }
 </style>
@@ -336,7 +479,43 @@
 
 </div>
 
-<section class="dark-section">
+<section class="dark-section youtube-news-section">
+
+    {% if youtube_videos %}
+    <div class="video-news-layout">
+        {% for video in youtube_videos %}
+            {% if forloop.first %}
+            <a class="video-news-main" href="{{ video.url }}" target="_blank" rel="noopener">
+                {% if video.thumbnail %}
+                <img src="{{ video.thumbnail }}" alt="{{ video.title }}">
+                {% endif %}
+                <div class="video-news-body">
+                    <h3>{{ video.title|truncatechars:105 }}</h3>
+                    <span class="video-play-chip">YouTube par dekhein</span>
+                </div>
+            </a>
+            <div class="video-news-list">
+            {% else %}
+                <a class="video-news-item" href="{{ video.url }}" target="_blank" rel="noopener">
+                    {% if video.thumbnail %}
+                    <img src="{{ video.thumbnail }}" alt="{{ video.title }}">
+                    {% endif %}
+                    <div>
+                        <h4>{{ video.title|truncatechars:95 }}</h4>
+                    </div>
+                </a>
+            {% endif %}
+            {% if forloop.last %}
+            </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="ad-box youtube-empty">
+        YouTube videos abhi load nahi ho paye.
+        <a href="https://www.youtube.com/@AajKaMudda" target="_blank" rel="noopener">Aaj Ka Mudda channel</a>
+    </div>
+    {% endif %}
 
     <div class="section-title mt-0">
         <span></span>
@@ -491,6 +670,27 @@
 </div>
 
 <section class="short-video-section">
+
+    {% if youtube_shorts %}
+    <div class="youtube-shorts-grid">
+        {% for short in youtube_shorts %}
+        <a class="short-video-card" href="{{ short.url }}" target="_blank" rel="noopener">
+            {% if short.thumbnail %}
+            <img src="{{ short.thumbnail }}" alt="{{ short.title }}">
+            {% endif %}
+            <div class="play-btn">▶</div>
+            <div class="short-video-title">
+                {{ short.title|truncatechars:75 }}
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="ad-box">
+        YouTube shorts abhi load nahi ho paye.
+        <a href="https://www.youtube.com/@AajKaMudda/shorts" target="_blank" rel="noopener">Aaj Ka Mudda Shorts</a>
+    </div>
+    {% endif %}
 
     <div class="section-title">
         <span></span>

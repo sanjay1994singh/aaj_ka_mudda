@@ -1,8 +1,13 @@
 from io import BytesIO
+import re
+from urllib.error import URLError
 from urllib.parse import quote_plus, urlencode
+from urllib.request import Request, urlopen
+import xml.etree.ElementTree as ET
 
 from PIL import Image, ImageDraw, ImageFont, ImageOps
 from django.conf import settings
+from django.core.cache import cache
 from django.http import HttpResponse
 from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse
@@ -14,6 +19,12 @@ from django.db.models import Q
 
 from news.models import NewsArticle
 from category.models import Category
+
+
+YOUTUBE_CHANNEL_URL = 'https://www.youtube.com/@AajKaMudda'
+YOUTUBE_SHORTS_URL = 'https://www.youtube.com/@AajKaMudda/shorts'
+YOUTUBE_FEED_URL = 'https://www.youtube.com/feeds/videos.xml?channel_id={channel_id}'
+YOUTUBE_CACHE_SECONDS = 15 * 60
 
 
 def public_absolute_url(path):
@@ -67,6 +78,155 @@ def category_latest_bundle(names, limit=4):
     }
 
 
+def fetch_url(url, timeout=5):
+    request = Request(
+        url,
+        headers={
+            'User-Agent': 'Mozilla/5.0 (compatible; AajKaMuddaBot/1.0)',
+        },
+    )
+    with urlopen(request, timeout=timeout) as response:
+        return response.read().decode('utf-8', errors='ignore')
+
+
+def get_youtube_channel_id():
+    cache_key = 'youtube_channel_id:aaj-ka-mudda'
+    cached = cache.get(cache_key)
+    if cached:
+        return cached
+
+    try:
+        html = fetch_url(YOUTUBE_CHANNEL_URL)
+    except (OSError, URLError):
+        return ''
+
+    patterns = (
+        r'"channelId":"(UC[^"]+)"',
+        r'<meta itemprop="channelId" content="(UC[^"]+)">',
+        r'"externalId":"(UC[^"]+)"',
+    )
+    for pattern in patterns:
+        match = re.search(pattern, html)
+        if match:
+            channel_id = match.group(1)
+            cache.set(cache_key, channel_id, 24 * 60 * 60)
+            return channel_id
+    return ''
+
+
+def latest_youtube_videos(limit=5):
+    cache_key = f'youtube_latest_videos:aaj-ka-mudda:{limit}'
+    cached = cache.get(cache_key)
+    if cached is not None:
+        return cached
+
+    channel_id = get_youtube_channel_id()
+    if not channel_id:
+        cache.set(cache_key, [], 5 * 60)
+        return []
+
+    try:
+        feed_xml = fetch_url(YOUTUBE_FEED_URL.format(channel_id=channel_id))
+        root = ET.fromstring(feed_xml)
+    except (OSError, URLError, ET.ParseError):
+        cache.set(cache_key, [], 5 * 60)
+        return []
+
+    namespaces = {
+        'atom': 'http://www.w3.org/2005/Atom',
+        'media': 'http://search.yahoo.com/mrss/',
+        'yt': 'http://www.youtube.com/xml/schemas/2015',
+    }
+    videos = []
+    for entry in root.findall('atom:entry', namespaces)[:limit]:
+        video_id = entry.findtext('yt:videoId', default='', namespaces=namespaces)
+        title = entry.findtext('atom:title', default='', namespaces=namespaces)
+        published = entry.findtext('atom:published', default='', namespaces=namespaces)
+        link_node = entry.find('atom:link[@rel="alternate"]', namespaces)
+        link = link_node.attrib.get('href') if link_node is not None else ''
+        thumbnail_node = entry.find('media:group/media:thumbnail', namespaces)
+        thumbnail = thumbnail_node.attrib.get('url') if thumbnail_node is not None else ''
+
+        if video_id and not thumbnail:
+            thumbnail = f'https://i.ytimg.com/vi/{video_id}/hqdefault.jpg'
+        if video_id and not link:
+            link = f'https://www.youtube.com/watch?v={video_id}'
+
+        if title and link:
+            videos.append({
+                'title': title,
+                'url': link,
+                'thumbnail': thumbnail,
+                'published': published,
+            })
+
+    cache.set(cache_key, videos, YOUTUBE_CACHE_SECONDS)
+    return videos
+
+
+def clean_youtube_text(value):
+    return (
+        value.replace('\\u0026', '&')
+        .replace('&amp;', '&')
+        .replace('\\"', '"')
+        .strip()
+    )
+
+
+def latest_youtube_shorts(limit=5):
+    cache_key = f'youtube_latest_shorts:aaj-ka-mudda:{limit}'
+    cached = cache.get(cache_key)
+    if cached is not None:
+        return cached
+
+    try:
+        html = fetch_url(YOUTUBE_SHORTS_URL)
+    except (OSError, URLError):
+        cache.set(cache_key, [], 5 * 60)
+        return []
+
+    video_ids = []
+    for pattern in (
+        r'"reelWatchEndpoint":\{"videoId":"([^"]+)"',
+        r'"webCommandMetadata":\{"url":"/shorts/([^"]+)"',
+        r'"/shorts/([A-Za-z0-9_-]{8,})"',
+    ):
+        for video_id in re.findall(pattern, html):
+            if video_id not in video_ids:
+                video_ids.append(video_id)
+            if len(video_ids) >= limit:
+                break
+        if len(video_ids) >= limit:
+            break
+
+    shorts = []
+    for video_id in video_ids[:limit]:
+        title = ''
+        title_match = re.search(
+            rf'"videoId":"{re.escape(video_id)}".{{0,1200}}?"title":\{{"runs":\[\{{"text":"([^"]+)"',
+            html,
+        )
+        if not title_match:
+            title_match = re.search(
+                rf'"videoId":"{re.escape(video_id)}".{{0,1200}}?"accessibilityData":\{{"label":"([^"]+)"',
+                html,
+            )
+        if title_match:
+            title = clean_youtube_text(title_match.group(1))
+
+        if not title:
+            title = 'Aaj Ka Mudda Short Video'
+
+        shorts.append({
+            'title': title,
+            'url': f'https://www.youtube.com/shorts/{video_id}',
+            'thumbnail': f'https://i.ytimg.com/vi/{video_id}/hqdefault.jpg',
+        })
+
+    cache.set(cache_key, shorts, YOUTUBE_CACHE_SECONDS)
+    return shorts
+
+
 def home(request):
     breaking_news = NewsArticle.objects.filter(
         is_breaking=True,
@@ -107,6 +267,8 @@ def home(request):
     side_news = latest_news[1:5]
 
     categories = Category.objects.all()
+    youtube_videos = latest_youtube_videos()
+    youtube_shorts = latest_youtube_shorts()
     context = {
         'breaking_news': breaking_news,
         'featured_news': featured_news,
@@ -119,6 +281,8 @@ def home(request):
         'article_bundle': article_bundle,
         'lifestyle_bundle': lifestyle_bundle,
         'categories': categories,
+        'youtube_videos': youtube_videos,
+        'youtube_shorts': youtube_shorts,
     }
 
     return render(request, 'home.html', context)
