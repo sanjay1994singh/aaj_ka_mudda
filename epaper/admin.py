@@ -15,7 +15,7 @@ class EpaperRegionAdmin(admin.ModelAdmin):
     list_display = ("name", "is_active", "created_at")
     list_filter = ("is_active",)
     search_fields = ("name",)
-    readonly_fields = ("created_at",)
+    readonly_fields = ("section", "created_at")
 
 
 @admin.register(EpaperEdition)
