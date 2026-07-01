@@ -471,26 +471,59 @@
         .breaking-text{
             overflow:hidden;
             white-space:nowrap;
+            flex:1;
         }
 
         .breaking-scroll{
-            display:inline-block;
-            padding-left:100%;
-        }
-
-        @keyframes ticker{
-            0%{
-                transform:translateX(0);
-            }
-            100%{
-                transform:translateX(-100%);
-            }
+            display:flex;
+            align-items:center;
+            gap:34px;
+            width:max-content;
+            animation:tickerMove 42s linear infinite;
         }
 
         .breaking-scroll a{
             color:var(--navy);
             font-weight:800;
-            margin-right:40px;
+            position:relative;
+            white-space:nowrap;
+        }
+
+        .breaking-scroll a::after{
+            content:"";
+            position:absolute;
+            top:50%;
+            right:-20px;
+            width:8px;
+            height:8px;
+            border-radius:50%;
+            background:var(--red);
+            transform:translateY(-50%);
+            box-shadow:0 0 0 4px rgba(215,25,32,.12);
+        }
+
+        .breaking-text:hover .breaking-scroll{
+            animation-play-state:paused;
+        }
+
+        @keyframes tickerMove{
+            from{
+                transform:translateX(0);
+            }
+            to{
+                transform:translateX(-50%);
+            }
+        }
+
+        @media(max-width:768px){
+            .breaking-scroll{
+                gap:28px;
+                animation-duration:64s;
+            }
+
+            .breaking-scroll a{
+                font-size:14px;
+            }
         }
     </style>
 
@@ -589,29 +622,15 @@
             ब्रेकिंग
         </div>
 
-        <div class="breaking-text">
-
-            <marquee
-                    behavior="scroll"
-                    direction="left"
-                    scrollamount="9">
-
+        <div class="breaking-text" aria-label="Breaking news updates">
+            <div class="breaking-scroll">
                 {% for news in breaking_news %}
-
-                <a href="{% url 'news_detail' news.slug %}">
-
-                    {{ news.title }}
-
-                </a>
-
-                &nbsp;&nbsp;&nbsp;&nbsp;
-                🔴
-                &nbsp;&nbsp;&nbsp;&nbsp;
-
+                <a href="{% url 'news_detail' news.slug %}">{{ news.title }}</a>
                 {% endfor %}
-
-            </marquee>
-
+                {% for news in breaking_news %}
+                <a href="{% url 'news_detail' news.slug %}" aria-hidden="true" tabindex="-1">{{ news.title }}</a>
+                {% endfor %}
+            </div>
         </div>
 
     </div>
@@ -628,21 +647,6 @@
 </footer>
 
 <script>
-    function tuneBreakingTickerSpeed() {
-        var isMobile = window.matchMedia('(max-width: 768px)').matches;
-        document.querySelectorAll('.breaking-text marquee').forEach(function (marquee) {
-            marquee.setAttribute('scrollamount', isMobile ? '4' : '9');
-            if (isMobile) {
-                marquee.setAttribute('scrolldelay', '35');
-            } else {
-                marquee.removeAttribute('scrolldelay');
-            }
-        });
-    }
-
-    tuneBreakingTickerSpeed();
-    window.addEventListener('resize', tuneBreakingTickerSpeed);
-
     document.querySelectorAll('.user-menu-toggle').forEach(function (button) {
         button.addEventListener('click', function (event) {
             event.stopPropagation();
