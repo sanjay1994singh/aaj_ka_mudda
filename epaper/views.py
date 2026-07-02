@@ -15,6 +15,15 @@ SHARE_IMAGE_WIDTH = 1200
 SHARE_IMAGE_HEIGHT = 630
 
 
+def group_editions_by_date(editions):
+    date_groups = []
+    for item in editions:
+        if not date_groups or date_groups[-1]["date"] != item.publish_date:
+            date_groups.append({"date": item.publish_date, "editions": []})
+        date_groups[-1]["editions"].append(item)
+    return date_groups
+
+
 def public_absolute_url(request, path):
     if not path:
         return ""
@@ -62,8 +71,19 @@ def get_share_image_url(page):
 
 
 def epaper_home(request, pk=None):
-    edition = get_object_or_404(EpaperEdition, pk=pk) if pk else EpaperEdition.objects.first()
-    edition_list = EpaperEdition.objects.all()
+    edition_queryset = EpaperEdition.objects.select_related("region").order_by(
+        "-publish_date", "region__name", "section", "-created_at"
+    )
+    edition_list = list(edition_queryset)
+    edition = (
+        get_object_or_404(EpaperEdition.objects.select_related("region"), pk=pk)
+        if pk
+        else (edition_list[0] if edition_list else None)
+    )
+    edition_date_groups = group_editions_by_date(edition_list)
+    current_date_editions = [
+        item for item in edition_list if edition and item.publish_date == edition.publish_date
+    ]
     page_records = list(edition.pages.all()) if edition else []
     pages = [
         {
@@ -112,6 +132,8 @@ def epaper_home(request, pk=None):
         {
             "edition": edition,
             "edition_list": edition_list,
+            "edition_date_groups": edition_date_groups,
+            "current_date_editions": current_date_editions,
             "pages": pages,
             "edition_date": edition_date,
             "current_date_iso": current_date_iso,
@@ -125,4 +147,3 @@ def epaper_home(request, pk=None):
             "absolute_image_url": absolute_image_url,
         },
     )
-

@@ -221,6 +221,62 @@ body:has(.epaper-shell) .main-menu a{
     color:#dbeafe;
 }
 
+.date-wise-editions{
+    display:flex;
+    flex-direction:column;
+    gap:9px;
+    margin:12px 0 14px;
+    padding:12px;
+    border:1px solid var(--border);
+    border-radius:14px;
+    background:#f8fafc;
+}
+
+.date-edition-group{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    flex-wrap:wrap;
+}
+
+.date-edition-group strong{
+    flex:0 0 92px;
+    color:var(--navy);
+    font-size:14px;
+    font-weight:900;
+}
+
+.date-edition-links{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    flex-wrap:wrap;
+    min-width:0;
+}
+
+.date-edition-links a{
+    display:inline-flex;
+    align-items:center;
+    min-height:34px;
+    max-width:260px;
+    border:1px solid var(--border);
+    border-radius:999px;
+    padding:7px 12px;
+    background:#fff;
+    color:var(--navy);
+    font-size:13px;
+    font-weight:900;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.date-edition-links a.is-active{
+    background:var(--navy);
+    border-color:var(--navy);
+    color:#fff;
+}
+
 .reader-layout{
     display:grid;
     grid-template-columns:128px minmax(0,1fr);
@@ -477,6 +533,7 @@ body:has(.epaper-shell) .main-menu a{
     .epaper-actions,
     .stage-topbar,
     .stage-bottombar,
+    .date-wise-editions,
     .edition-strip{
         display:none;
     }
