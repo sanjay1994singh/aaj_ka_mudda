@@ -231,7 +231,7 @@ def home(request):
     breaking_news = NewsArticle.objects.filter(
         is_breaking=True,
         status='published'
-    )[:10]
+    ).order_by('-created_at')[:10]
 
     latest_news = NewsArticle.objects.filter(
         status='published'
@@ -249,7 +249,7 @@ def home(request):
         category_id=3
     ).select_related(
         'category'
-    ).order_by('-id')[:6]
+    ).order_by('-created_at')[:6]
 
     politics_news = NewsArticle.objects.filter(
         status='published',
@@ -298,11 +298,11 @@ def news_detail(request, slug):
     related_news = NewsArticle.objects.filter(
         category=news.category,
         status='published'
-    ).exclude(id=news.id)[:6]
+    ).exclude(id=news.id).order_by('-created_at')[:6]
 
     latest_news = NewsArticle.objects.filter(
         status='published'
-    ).exclude(id=news.id)[:6]
+    ).exclude(id=news.id).order_by('-created_at')[:6]
 
     canonical_path = reverse('news_detail', kwargs={'slug': news.slug})
     share_path = reverse('news_share_redirect', kwargs={'pk': news.pk})
