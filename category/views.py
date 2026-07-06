@@ -12,7 +12,7 @@ def category_news(request, slug):
     news_list = NewsArticle.objects.filter(
         category=category,
         status='published'
-    ).order_by('-created_at')
+    ).order_by('-id')
 
     featured_news = news_list.first()
     other_news = news_list[1:13]

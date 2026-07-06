@@ -57,7 +57,7 @@ def dashboard_view(request):
         "total_views": own_articles.aggregate(total=Sum("views"))["total"] or 0,
         "breaking_articles": own_articles.filter(is_breaking=True).count(),
         "featured_articles": own_articles.filter(is_featured=True).count(),
-        "latest_articles": own_articles.order_by("-created_at")[:10],
+        "latest_articles": own_articles.order_by("-id")[:10],
         "category_stats": category_stats,
     }
     return render(request, "accounts/dashboard.html", context)

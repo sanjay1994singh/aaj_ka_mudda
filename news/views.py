@@ -70,7 +70,7 @@ def category_latest_bundle(names, limit=4):
         news_items = NewsArticle.objects.filter(
             category=category,
             status='published',
-        ).select_related('category').order_by('-created_at')[:limit]
+        ).select_related('category').order_by('-id')[:limit]
 
     return {
         'category': category,
@@ -231,32 +231,32 @@ def home(request):
     breaking_news = NewsArticle.objects.filter(
         is_breaking=True,
         status='published'
-    ).order_by('-created_at')[:10]
+    ).order_by('-id')[:10]
 
     latest_news = NewsArticle.objects.filter(
         status='published'
-    ).order_by('-created_at')
+    ).order_by('-id')
 
     delhi_ncr = NewsArticle.objects.filter(
         status='published',
         category_id=2
     ).select_related(
         'category'
-    ).order_by('-created_at')[:4]
+    ).order_by('-id')[:4]
 
     up_news = NewsArticle.objects.filter(
         status='published',
         category_id=3
     ).select_related(
         'category'
-    ).order_by('-created_at')[:6]
+    ).order_by('-id')[:6]
 
     politics_news = NewsArticle.objects.filter(
         status='published',
         category_id=4
     ).select_related(
         'category'
-    ).order_by('-created_at')[:4]
+    ).order_by('-id')[:4]
 
     national_bundle = category_latest_bundle(['National', 'राष्ट्रीय', 'Rashtriya'])
     article_bundle = category_latest_bundle(['Article', 'Artical', 'आर्टिकल'])
@@ -298,11 +298,11 @@ def news_detail(request, slug):
     related_news = NewsArticle.objects.filter(
         category=news.category,
         status='published'
-    ).exclude(id=news.id).order_by('-created_at')[:6]
+    ).exclude(id=news.id).order_by('-id')[:6]
 
     latest_news = NewsArticle.objects.filter(
         status='published'
-    ).exclude(id=news.id).order_by('-created_at')[:6]
+    ).exclude(id=news.id).order_by('-id')[:6]
 
     canonical_path = reverse('news_detail', kwargs={'slug': news.slug})
     share_path = reverse('news_share_redirect', kwargs={'pk': news.pk})

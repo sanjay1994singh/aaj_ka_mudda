@@ -9,5 +9,5 @@ def breaking_news_processor(request):
             NewsArticle.objects.filter(
                 is_breaking=True,
                 status='published'
-            ).order_by('-created_at')[:10]
+            ).order_by('-id')[:10]
     }
