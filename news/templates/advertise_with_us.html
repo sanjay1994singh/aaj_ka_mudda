@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}Advertise With Us | Aaj Ka Mudda{% endblock %}
+{% block meta_description %}Advertise with Aaj Ka Mudda for digital news portal visibility, sponsored content and banner placements.{% endblock %}
+
+{% block content %}
+<section class="static-page">
+    <div class="page-hero">
+        <span>Advertise</span>
+        <h1>Advertise With Aaj Ka Mudda</h1>
+        <p>Reach Hindi news readers through digital visibility, banner placements and sponsored campaigns.</p>
+    </div>
+
+    <div class="page-grid">
+        <article class="page-card page-main">
+            <h2>Available Promotion Options</h2>
+            <ul class="page-list">
+                <li>Homepage banner advertisement</li>
+                <li>Category page advertisement</li>
+                <li>Article detail page advertisement</li>
+                <li>Sponsored article or brand story</li>
+                <li>Video and social media campaign support</li>
+                <li>E-paper advertisement placement</li>
+            </ul>
+
+            <h2>Why Advertise Here</h2>
+            <p>Aaj Ka Mudda is built for Hindi readers and local/regional news audiences. It can support public campaigns, local businesses, institutions, events and service promotions.</p>
+        </article>
+
+        <aside class="page-card">
+            <h3>Advertising Enquiry</h3>
+            <div class="info-stack">
+                <div><strong>Email</strong><span>ads@aajkamudda.in</span></div>
+                <div><strong>Phone</strong><span>+91 00000 00000</span></div>
+                <div><strong>Media Kit</strong><span>Available on request</span></div>
+            </div>
+            <a class="page-button" href="{% url 'contact_us' %}">Contact for Ads</a>
+        </aside>
+    </div>
+</section>
+{% endblock %}

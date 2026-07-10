@@ -1,55 +1,54 @@
 {% extends 'base.html' %}
 
-{% block title %}
-About Us
-{% endblock %}
+{% block title %}About Us | Aaj Ka Mudda{% endblock %}
+{% block meta_description %}About Aaj Ka Mudda, a Hindi news portal focused on public issues, local updates, politics, lifestyle and e-paper editions.{% endblock %}
 
 {% block content %}
-
-<section class="about-page py-5">
-
-    <div class="container">
-
-        <div class="row align-items-center">
-
-            <div class="col-lg-6">
-
-                <h1 class="mb-4">
-
-                    About Our News Portal
-
-                </h1>
-
-                <p class="mb-4">
-
-                    Welcome to our professional news portal website.
-                    We provide the latest breaking news, politics,
-                    sports, entertainment, business, technology,
-                    viral stories, and trending updates from India
-                    and around the world.
-
-                </p>
-
-                <p>
-
-                    Our mission is to deliver fast, reliable,
-                    and accurate news with a modern reading experience.
-
-                </p>
-
-            </div>
-
-            <div class="col-lg-6">
-
-                <img src="https://images.unsplash.com/photo-1495020689067-958852a7765e"
-                     class="img-fluid rounded shadow">
-
-            </div>
-
-        </div>
-
+<section class="static-page">
+    <div class="page-hero">
+        <span>About Us</span>
+        <h1>Aaj Ka Mudda</h1>
+        <p>A Hindi news platform focused on public issues, ground reports, local updates and responsible journalism.</p>
     </div>
 
-</section>
+    <div class="page-grid">
+        <article class="page-card page-main">
+            <h2>Who We Are</h2>
+            <p>
+                Aaj Ka Mudda is a digital Hindi news portal created to bring important public issues, local news,
+                politics, lifestyle updates, e-paper editions and community stories to readers in a simple and
+                accessible format.
+            </p>
+            <p>
+                Our goal is to keep readers informed with fast updates, clear presentation and coverage that connects
+                directly with everyday concerns of people.
+            </p>
 
+            <h2>Our Mission</h2>
+            <p>
+                To publish timely, useful and reader-focused news while giving space to local voices, public concerns,
+                social issues and verified information.
+            </p>
+
+            <h2>What We Cover</h2>
+            <ul class="page-list">
+                <li>National, state and local news</li>
+                <li>Politics, public issues and administration updates</li>
+                <li>Delhi NCR, Uttar Pradesh and regional coverage</li>
+                <li>Lifestyle, articles, videos and YouTube updates</li>
+                <li>Daily e-paper editions and archive-style reading</li>
+            </ul>
+        </article>
+
+        <aside class="page-card">
+            <h3>Portal Highlights</h3>
+            <div class="info-stack">
+                <div><strong>Language</strong><span>Hindi News Portal</span></div>
+                <div><strong>Focus</strong><span>Public issues and local news</span></div>
+                <div><strong>Format</strong><span>Website, video and e-paper</span></div>
+                <div><strong>Reader First</strong><span>Mobile friendly reading</span></div>
+            </div>
+        </aside>
+    </div>
+</section>
 {% endblock %}

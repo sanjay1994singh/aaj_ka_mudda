@@ -288,6 +288,34 @@ def home(request):
     return render(request, 'home.html', context)
 
 
+def about_us(request):
+    return render(request, 'about.html')
+
+
+def contact_us(request):
+    return render(request, 'contact.html')
+
+
+def privacy_policy(request):
+    return render(request, 'privacy_policy.html')
+
+
+def disclaimer(request):
+    return render(request, 'disclaimer.html')
+
+
+def terms_and_conditions(request):
+    return render(request, 'terms_and_conditions.html')
+
+
+def advertise_with_us(request):
+    return render(request, 'advertise_with_us.html')
+
+
+def editorial_policy(request):
+    return render(request, 'editorial_policy.html')
+
+
 def news_detail(request, slug):
     news = get_object_or_404(
         NewsArticle,
