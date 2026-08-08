@@ -67,8 +67,11 @@ SECRET_KEY = os.environ.get(
 DEBUG = env_bool('DEBUG', True)
 
 ALLOWED_HOSTS = env_list('ALLOWED_HOSTS', '*')
-SITE_URL = os.environ.get('SITE_URL', 'https://aajkamudda.in').rstrip('/')
-CSRF_TRUSTED_ORIGINS = env_list('CSRF_TRUSTED_ORIGINS', 'https://aajkamudda.in,https://www.aajkamudda.in')
+SITE_URL = os.environ.get('SITE_URL', 'https://aajkamudda.com').rstrip('/')
+CSRF_TRUSTED_ORIGINS = env_list(
+    'CSRF_TRUSTED_ORIGINS',
+    'https://aajkamudda.com,https://www.aajkamudda.com,https://aajkamudda.in,https://www.aajkamudda.in',
+)
 USE_X_FORWARDED_HOST = env_bool('USE_X_FORWARDED_HOST', True)
 
 if env_bool('SECURE_PROXY_SSL', True):

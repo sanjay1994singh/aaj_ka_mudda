@@ -25,6 +25,18 @@ YOUTUBE_CHANNEL_URL = 'https://www.youtube.com/@AajKaMudda'
 YOUTUBE_SHORTS_URL = 'https://www.youtube.com/@AajKaMudda/shorts'
 YOUTUBE_FEED_URL = 'https://www.youtube.com/feeds/videos.xml?channel_id={channel_id}'
 YOUTUBE_CACHE_SECONDS = 15 * 60
+ADS_TXT_CONTENT = 'google.com, pub-1852217188512354, DIRECT, f08c47fec0942fa0\n'
+ROBOTS_TXT_CONTENT = 'User-agent: *\n\nAllow: /\n\nSitemap: https://aajkamudda.com/sitemap.xml\n'
+
+
+@cache_control(public=True, max_age=86400)
+def ads_txt(request):
+    return HttpResponse(ADS_TXT_CONTENT, content_type='text/plain')
+
+
+@cache_control(public=True, max_age=86400)
+def robots_txt(request):
+    return HttpResponse(ROBOTS_TXT_CONTENT, content_type='text/plain')
 
 
 def public_absolute_url(path):

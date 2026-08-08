@@ -19,13 +19,22 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.sitemaps.views import sitemap
-from django.views.generic import TemplateView
+from news.sitemaps import NewsSitemap, StaticViewSitemap
+from news.views import ads_txt, robots_txt
 
 admin.site.site_header = "Aaj Ka Mudda Admin"
 admin.site.site_title = "Aaj Ka Mudda"
 admin.site.index_title = "Aaj Ka Mudda Dashboard"
 
+sitemaps = {
+    "static": StaticViewSitemap,
+    "news": NewsSitemap,
+}
+
 urlpatterns = [
+    path('ads.txt', ads_txt, name='ads_txt'),
+    path('robots.txt', robots_txt, name='robots_txt'),
+    path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
     path('admin/', admin.site.urls),
     path('auth/', include('social_django.urls', namespace='social')),
     path('accounts/', include('accounts.urls')),
