@@ -36,9 +36,11 @@
 
                     <a href="{% url 'news_detail' item.slug %}">
 
+                        {% if item.image_src %}
                         <img src="{{ item.image_src }}"
                              class="img-fluid"
                              alt="{{ item.title }}">
+                        {% endif %}
 
                     </a>
 
@@ -68,7 +70,7 @@
 
                     <p>
 
-                        {{ item.meta_description|truncatewords:20 }}
+                        {{ item.short_description|default:item.plain_content|truncatewords:20 }}
 
                     </p>
 

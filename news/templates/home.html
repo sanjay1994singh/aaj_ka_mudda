@@ -328,10 +328,6 @@
 
 {% block content %}
 
-<div class="ad-box">
-    Advertisement Space 970x250
-</div>
-
 <section class="row g-4">
 
     <!-- Main Hero News -->
@@ -347,9 +343,6 @@
                 {% if featured_news.image_src %}
                 <img src="{{ featured_news.image_src }}"
                      alt="{{ featured_news.title }}">
-                {% else %}
-                <img src="https://picsum.photos/400/260?random={{ forloop.counter }}"
-                     alt="">
                 {% endif %}
 
                 <div class="hero-content">
@@ -396,9 +389,6 @@
                 {% if news.image_src %}
                 <img src="{{ news.image_src }}"
                      alt="{{ news.title }}">
-                {% else %}
-                <img src="https://picsum.photos/400/260?random={{ forloop.counter }}"
-                     alt="">
                 {% endif %}
 
                 <div>
@@ -440,9 +430,6 @@
 
                 {% if news.image_src %}
                 <img src="{{ news.image_src }}" alt="{{ news.title }}">
-                {% else %}
-                <img src="https://picsum.photos/400/260?random={{ forloop.counter }}"
-                     alt="">
                 {% endif %}
 
                 <div class="news-body">
@@ -581,9 +568,6 @@
 
                 {% if news.image_src %}
                 <img src="{{ news.image_src }}" alt="{{ news.title }}">
-                {% else %}
-                <img src="https://picsum.photos/400/260?random={{ forloop.counter }}"
-                     alt="">
                 {% endif %}
 
                 <div class="news-body">
@@ -634,9 +618,6 @@
                 {% if news.image_src %}
                 <img src="{{ news.image_src }}"
                      alt="{{ news.title }}">
-                {% else %}
-                <img src="https://picsum.photos/300/200?random={{ forloop.counter|add:60 }}"
-                     alt="">
                 {% endif %}
 
                 <div>
@@ -697,50 +678,6 @@
         <h2>शॉर्ट वीडियो</h2>
     </div>
 
-    <div class="short-video-grid">
-
-        <div class="short-video-card">
-            <img src="https://picsum.photos/320/520?random=201" alt="">
-            <div class="play-btn">▶</div>
-            <div class="short-video-title">
-                जनता के सवालों पर नेता जी का बड़ा बयान
-            </div>
-        </div>
-
-        <div class="short-video-card">
-            <img src="https://picsum.photos/320/520?random=202" alt="">
-            <div class="play-btn">▶</div>
-            <div class="short-video-title">
-                पुलिस कार्रवाई पर स्थानीय लोगों की प्रतिक्रिया
-            </div>
-        </div>
-
-        <div class="short-video-card">
-            <img src="https://picsum.photos/320/520?random=203" alt="">
-            <div class="play-btn">▶</div>
-            <div class="short-video-title">
-                पत्रकारों से बातचीत में बड़ा खुलासा
-            </div>
-        </div>
-
-        <div class="short-video-card">
-            <img src="https://picsum.photos/320/520?random=204" alt="">
-            <div class="play-btn">▶</div>
-            <div class="short-video-title">
-                वायरल वीडियो पर प्रशासन ने लिया संज्ञान
-            </div>
-        </div>
-
-        <div class="short-video-card">
-            <img src="https://picsum.photos/320/520?random=205" alt="">
-            <div class="play-btn">▶</div>
-            <div class="short-video-title">
-                विमान हादसे पर सामने आई बड़ी जानकारी
-            </div>
-        </div>
-
-    </div>
-
 </section>
 
 <section class="three-column-news">
@@ -762,8 +699,6 @@
                 <div class="column-news">
                     {% if news.image_src %}
                     <img src="{{ news.image_src }}" alt="{{ news.title }}">
-                    {% else %}
-                    <img src="https://picsum.photos/300/200?random={{ forloop.counter|add:120 }}" alt="">
                     {% endif %}
                     <div>
                         <h4>{{ news.title|truncatechars:80 }}</h4>
@@ -792,8 +727,6 @@
                 <div class="column-news">
                     {% if news.image_src %}
                     <img src="{{ news.image_src }}" alt="{{ news.title }}">
-                    {% else %}
-                    <img src="https://picsum.photos/300/200?random={{ forloop.counter|add:140 }}" alt="">
                     {% endif %}
                     <div>
                         <h4>{{ news.title|truncatechars:80 }}</h4>
@@ -822,8 +755,6 @@
                 <div class="column-news">
                     {% if news.image_src %}
                     <img src="{{ news.image_src }}" alt="{{ news.title }}">
-                    {% else %}
-                    <img src="https://picsum.photos/300/200?random={{ forloop.counter|add:160 }}" alt="">
                     {% endif %}
                     <div>
                         <h4>{{ news.title|truncatechars:80 }}</h4>
@@ -1011,9 +942,5 @@
 </section>
 
 {% endcomment %}
-
-<div class="ad-box">
-    Advertisement Space 728x90
-</div>
 
 {% endblock %}

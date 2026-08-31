@@ -6,6 +6,7 @@ from category.models import Category
 from django_ckeditor_5.fields import CKEditor5Field
 from django.conf import settings
 from django.utils import timezone
+from django.utils.html import strip_tags
 
 
 def hindi_slug(text):
@@ -179,6 +180,22 @@ class NewsArticle(models.Model):
         if normalized_path.startswith('media/'):
             return Path(settings.BASE_DIR) / normalized_path
         return Path(settings.MEDIA_ROOT) / normalized_path
+
+    @property
+    def plain_content(self):
+        return strip_tags(self.content or "").strip()
+
+    @property
+    def word_count(self):
+        return len(self.plain_content.split())
+
+    @property
+    def reading_minutes(self):
+        return max(1, round(self.word_count / 220)) if self.word_count else 1
+
+    @property
+    def has_substantial_content(self):
+        return self.word_count >= 250
 
     def __str__(self):
         return self.title

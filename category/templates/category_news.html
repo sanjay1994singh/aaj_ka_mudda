@@ -11,10 +11,6 @@
 
 {% block content %}
 
-<div class="ad-box">
-    Advertisement Space 970x250
-</div>
-
 <div class="section-title">
     <span></span>
     <h2>{{ category.name }}</h2>
@@ -30,8 +26,6 @@
 
                 {% if featured_news.image_src %}
                 <img src="{{ featured_news.image_src }}" alt="{{ featured_news.title }}">
-                {% else %}
-                <img src="https://picsum.photos/900/520?random=11" alt="">
                 {% endif %}
 
                 <div class="hero-content">
@@ -68,8 +62,6 @@
 
                 {% if news.image_src %}
                 <img src="{{ news.image_src }}" alt="{{ news.title }}">
-                {% else %}
-                <img src="https://picsum.photos/300/200?random={{ forloop.counter }}" alt="">
                 {% endif %}
 
                 <div>
@@ -108,8 +100,6 @@
 
                 {% if news.image_src %}
                 <img src="{{ news.image_src }}" alt="{{ news.title }}">
-                {% else %}
-                <img src="https://picsum.photos/400/260?random={{ forloop.counter|add:20 }}" alt="">
                 {% endif %}
 
                 <div class="news-body">
@@ -134,7 +124,7 @@
 
     <div class="col-12">
         <div class="ad-box">
-            इस category में अभी कोई news publish नहीं हुई है।
+            इस श्रेणी में अभी कोई खबर प्रकाशित नहीं हुई है।
         </div>
     </div>
 
