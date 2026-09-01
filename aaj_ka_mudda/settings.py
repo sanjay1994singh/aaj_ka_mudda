@@ -123,12 +123,14 @@ CKEDITOR_5_FILE_UPLOAD_PERMISSION = "authenticated"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'aaj_ka_mudda.middleware.NoCacheHtmlMiddleware',
 ]
 
 ROOT_URLCONF = 'aaj_ka_mudda.urls'
@@ -202,6 +204,15 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [
     BASE_DIR / 'static'
 ]
+STORAGES = {
+    'default': {
+        'BACKEND': 'django.core.files.storage.FileSystemStorage',
+    },
+    'staticfiles': {
+        'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage',
+    },
+}
+WHITENOISE_MAX_AGE = 31536000
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
