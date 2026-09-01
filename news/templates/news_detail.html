@@ -19,6 +19,7 @@
 <meta property="og:title" content="{{ news.title }}">
 <meta property="og:description" content="{{ meta_description }}">
 <meta property="og:url" content="{{ canonical_url }}">
+{% if thumbnail_url %}
 <meta property="og:image" content="{{ thumbnail_url }}">
 <meta property="og:image:url" content="{{ thumbnail_url }}">
 <meta property="og:image:secure_url" content="{{ thumbnail_url }}">
@@ -26,11 +27,14 @@
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="{{ news.title }}">
+{% endif %}
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="{{ news.title }}">
 <meta name="twitter:description" content="{{ meta_description }}">
+{% if thumbnail_url %}
 <meta name="twitter:image" content="{{ thumbnail_url }}">
 <meta name="twitter:image:alt" content="{{ news.title }}">
+{% endif %}
 {% if news.created_at %}
 <meta property="article:published_time" content="{{ news.created_at|date:'c' }}">
 {% endif %}
@@ -43,7 +47,7 @@
   "@type": "NewsArticle",
   "headline": "{{ news.title|escapejs }}",
   "description": "{{ meta_description|escapejs }}",
-  "image": ["{{ thumbnail_url }}"],
+  {% if thumbnail_url %}"image": ["{{ thumbnail_url }}"],{% endif %}
   "datePublished": "{{ news.created_at|date:'c' }}",
   "dateModified": "{{ news.updated_at|date:'c' }}",
   "author": {

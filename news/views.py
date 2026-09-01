@@ -345,12 +345,9 @@ def news_detail(request, slug):
     ).exclude(id=news.id).order_by('-id')[:6]
 
     canonical_path = reverse('news_detail', kwargs={'slug': news.slug})
-    share_path = reverse('news_share_redirect', kwargs={'pk': news.pk})
-    fallback_image_path = reverse('news_share_image', kwargs={'slug': news.slug})
     canonical_url = request_absolute_url(request, canonical_path)
-    share_url = request_absolute_url(request, share_path)
-    fallback_image_url = request_absolute_url(request, fallback_image_path)
-    thumbnail_url = fallback_image_url
+    share_url = canonical_url
+    thumbnail_url = article_image_url(request, news)
     description = share_description(news)
     share_text = f'{news.title} - {share_url}'
 
