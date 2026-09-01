@@ -9,7 +9,7 @@ from PIL import Image, ImageDraw, ImageFont, ImageOps
 from django.conf import settings
 from django.core.cache import cache
 from django.http import HttpResponse
-from django.shortcuts import redirect, render, get_object_or_404
+from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.utils.html import strip_tags
 from django.utils.text import Truncator
@@ -383,7 +383,20 @@ def news_share_redirect(request, pk):
         pk=pk,
         status='published'
     )
-    return redirect('news_detail', slug=news.slug, permanent=True)
+    canonical_path = reverse('news_detail', kwargs={'slug': news.slug})
+    canonical_url = request_absolute_url(request, canonical_path)
+    description = share_description(news)
+
+    return render(
+        request,
+        'share_preview.html',
+        {
+            'news': news,
+            'canonical_url': canonical_url,
+            'thumbnail_url': article_image_url(request, news),
+            'meta_description': description,
+        },
+    )
 
 
 @cache_control(public=True, max_age=86400)
